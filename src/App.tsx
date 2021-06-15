@@ -1,5 +1,4 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import './App.css'
 import Base from './views/Base'
 import Login from './views/Login'
 
