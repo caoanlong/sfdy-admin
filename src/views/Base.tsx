@@ -37,29 +37,41 @@ function Base() {
 							icon={<HomeFilled />}>
 							首页
 						</Menu.Item>
-						<Menu.Item 
+						<SubMenu 
 							key="2" 
+							icon={<TeamOutlined />} 
+							title="视频">
+							<Menu.Item key="2-1">视频列表</Menu.Item>
+							<Menu.Item key="2-2">视频扫描删除</Menu.Item>
+						</SubMenu>
+						<Menu.Item 
+							key="3" 
 							icon={<DesktopOutlined />}>
-							Option 2
+							Banner
+						</Menu.Item>
+						<Menu.Item 
+							key="4" 
+							icon={<DesktopOutlined />}>
+							SEO
+						</Menu.Item>
+						<Menu.Item 
+							key="5" 
+							icon={<DesktopOutlined />}>
+							友链
+						</Menu.Item>
+						<Menu.Item 
+							key="6" 
+							icon={<DesktopOutlined />}>
+							脚本代码
 						</Menu.Item>
 						<SubMenu 
-							key="sub1" 
-							icon={<UserOutlined />} 
-							title="用户">
-							<Menu.Item key="3">Tom</Menu.Item>
-							<Menu.Item key="4">Bill</Menu.Item>
-							<Menu.Item key="5">Alex</Menu.Item>
-						</SubMenu>
-						<SubMenu 
-							key="sub2" 
+							key="7" 
 							icon={<TeamOutlined />} 
 							title="系统">
-							<Menu.Item key="6">Team 1</Menu.Item>
-							<Menu.Item key="8">Team 2</Menu.Item>
+							<Menu.Item key="7-1">用户</Menu.Item>
+							<Menu.Item key="7-2">角色</Menu.Item>
+							<Menu.Item key="7-3">权限</Menu.Item>
 						</SubMenu>
-						<Menu.Item key="9" icon={<FileOutlined />}>
-							文件
-						</Menu.Item>
 					</Menu>
 				</Sider>
 				<Layout>
