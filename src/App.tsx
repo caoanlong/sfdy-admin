@@ -1,19 +1,24 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { AppState } from './store'
 import Base from './views/Base'
 import Login from './views/Login'
 
 function App() {
+	const token = useSelector((state: AppState) => state.user.token)
 	return (
-		<BrowserRouter>
+		<Router>
 			<Switch>
-				<Route path="/login">
+				<Route path="/login" exact>
 					<Login/>
 				</Route>
-				<Route path="/">
-					<Base/>
+				<Route path="">
+					{
+						token ? <Base/> : <Redirect to="/login" />
+					}
 				</Route>
 			</Switch>
-		</BrowserRouter>
+		</Router>
 	);
 }
 
