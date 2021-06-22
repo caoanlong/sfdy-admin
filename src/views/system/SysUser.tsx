@@ -1,9 +1,8 @@
-import { Table, Tag, Space, Form, Row, Col, Button, Input, Select } from "antd"
-import { UpOutlined, DownOutlined } from '@ant-design/icons'
+import { Table, Tag, Form, Row, Col, Button, Input, Select } from "antd"
 import React, { useEffect, useState } from "react"
 import dayjs from 'dayjs'
 import { long2ip } from '../../utils/tools'
-import Admin, { AdminFindListParams } from "../../api/Admin"
+import AdminApi, { AdminFindListParams } from "../../api/AdminApi"
 import { User } from "../../types"
 
 const columns = [
@@ -61,32 +60,18 @@ function SysUser() {
 
     const [ list, setList ] = useState([])
     const [ total, setTotal ] = useState(0)
-    const [ pageIndex, setPageIndex ] = useState(1)
-    const [ adminStatus, setAdminStatus ] = useState(undefined)
-    const [ adminName, setAdminName ] = useState(undefined)
+    let pageIndex = 1, pageSize = 10
+    const [ form ] = Form.useForm()
 
-    const getList = () => {
-        const data: AdminFindListParams = {
+    const getList = (data?: AdminFindListParams) => {
+        AdminApi.findList({
             pageIndex,
-            pageSize: 10,
-        }
-        if (adminStatus !== undefined) {
-            data.adminStatus = adminStatus
-        }
-        if (adminName !== undefined) {
-            data.adminName = adminName
-        }
-        Admin.findList(data).then(res => {
-            console.log(res.data.data)
+            pageSize,
+            ...data
+        }).then(res => {
             const rows = res.data.data.list.map((item: User) => ({
                 key: item.adminId,
-                adminName: item.adminName,
-                adminStatus: item.adminStatus,
-                adminLoginIp: item.adminLoginIp,
-                adminLastLoginIp: item.adminLastLoginIp,
-                adminLoginTime: item.adminLoginTime,
-                adminLastLoginTime: item.adminLastLoginTime,
-                adminLoginNum: item.adminLoginNum
+                ...item
             }))
             setList(rows)
             setTotal(res.data.data.total)
@@ -94,10 +79,10 @@ function SysUser() {
     }
 
     const onFinish = (values: any) => {
-        setAdminName(values.adminName)
-        setAdminStatus(values.adminStatus)
-        getList()
-        console.log('Received values of form: ', values)
+        getList({
+            adminStatus: values.adminStatus,
+            adminName: values.adminName
+        })
     }
 
     useEffect(() => {
@@ -109,18 +94,20 @@ function SysUser() {
             <Form
                 name="advanced_search"
                 className="bg-white m-4 p-3 shadow"
+                form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
                     <Col span={6} key="1">
                         <Form.Item name="adminName" label="名称">
-                            <Input placeholder="请输入..." value={adminName}/>
+                            <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
                     <Col span={6} key="2">
                         <Form.Item name="adminStatus" label="状态">
                             <Select
                                 placeholder="请选择"
-                                allowClear value={adminStatus}>
+                                allowClear>
+                                <Select.Option value="">全部</Select.Option>
                                 <Select.Option value={1}>已启用</Select.Option>
                                 <Select.Option value={0}>已禁用</Select.Option>
                             </Select>
@@ -135,8 +122,7 @@ function SysUser() {
                         <Button
                             className="mx-2"
                             onClick={() => {
-                                setAdminStatus(undefined)
-                                setAdminName(undefined)
+                                form.resetFields()
                                 getList()
                             }}>
                             重置
@@ -144,7 +130,23 @@ function SysUser() {
                     </Col>
                 </Row>
                 </Form>
-            <Table className="bg-white m-4 p-3 shadow" columns={columns} dataSource={list} bordered/>
+            <Table 
+                className="bg-white m-4 p-3 shadow" 
+                columns={columns} 
+                dataSource={list} 
+                pagination={{
+                    total,
+                    showSizeChanger: true,
+                    showTotal: total => `总数： ${total} 条`,
+                    onChange: (page, size) => {
+                        console.log(page, size)
+                        pageIndex = page
+                        pageSize = size ?? pageSize
+                        getList()
+                    }
+                }}
+                bordered>
+            </Table>
         </div>
     )
 }

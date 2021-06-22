@@ -2,7 +2,7 @@ import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useDispatch } from 'react-redux'
 import { setToken } from '../store/actions'
-import Admin from '../api/Admin'
+import AdminApi from '../api/AdminApi'
 import { Res } from '../types'
 import { AxiosResponse } from 'axios'
 import { useHistory } from 'react-router'
@@ -16,7 +16,7 @@ function Login() {
 
     const onFinish = (values: any) => {
         setLoading(true)
-        Admin.login({
+        AdminApi.login({
             adminName: values.username,
             adminPwd: values.password
         }).then((res: AxiosResponse<Res<any>>) => {

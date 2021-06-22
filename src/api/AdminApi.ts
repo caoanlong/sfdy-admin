@@ -3,13 +3,13 @@ import request from '../utils/request'
 
 
 export type AdminFindListParams = {
-    pageIndex: number, 
-    pageSize: number, 
-    adminStatus?: number, 
+    pageIndex?: number, 
+    pageSize?: number, 
+    adminStatus?: number | string, 
     adminName?: string
 }
 
-class Admin {
+class AdminApi {
     static url = '/admin'
 
     @throttle(1000)
@@ -25,7 +25,7 @@ class Admin {
         return request({ url: this.url + '/userInfo '})
     }
 
-    static findList(params: AdminFindListParams) {
+    static findList(params?: AdminFindListParams) {
         return request({
             url: this.url + '/findList',
             params
@@ -33,4 +33,4 @@ class Admin {
     }
 }
 
-export default Admin
+export default AdminApi

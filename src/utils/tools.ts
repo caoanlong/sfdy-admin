@@ -14,3 +14,8 @@ export function long2ip(ipl: number){
         (ipl>>8 & 255) +'.' +
         (ipl & 255) )
 }
+
+export function decodeUnicode(str: string) {
+    str = str.replace(/\\/g, "%")
+    return unescape(str)
+}
