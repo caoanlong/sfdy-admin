@@ -1,22 +1,32 @@
-import { Switch, Route, Link, useHistory } from 'react-router-dom'
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom'
 import { Layout, Menu, Avatar, Dropdown } from 'antd'
 import {
 	MenuUnfoldOutlined,
   	MenuFoldOutlined,
-	DesktopOutlined,
-	PieChartOutlined,
-	FileOutlined,
-	TeamOutlined,
 	UserOutlined,
-	HomeFilled
+	HomeFilled,
+	SettingFilled,
+	PlaySquareFilled,
+	PictureFilled,
+	CodeFilled,
+	GoogleSquareFilled,
+	ApiFilled
   } from '@ant-design/icons'
 import Index from './Index'
-import About from './About'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { fetchUserInfo, setToken, setUserInfo } from '../store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '../store'
 import { User } from '../types'
+import VideoList from './video/VideoList'
+import VideoCollect from './video/VideoCollect'
+import VideoScan from './video/VideoScan'
+import Banner from './Banner'
+import SEO from './SEO'
+import FriendLink from './FriendLink'
+import ScriptCode from './ScriptCode'
+import SysUser from './system/SysUser'
+import SysRole from './system/SysRole'
 
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
@@ -27,6 +37,7 @@ function Base() {
 	const userInfo: User = useSelector((state: AppState) => state.user.userInfo)
 	const dispatch = useDispatch()
 	const history = useHistory()
+	const location = useLocation()
 
 	useEffect(() => {
 		dispatch(fetchUserInfo())
@@ -38,6 +49,10 @@ function Base() {
 		history.push('/login')
 	}
 
+	const handleClick = (e: any) => {
+		history.push(e.key)
+	}
+
     return (
         <div>
 			<Layout className="min-h-screen">
@@ -47,8 +62,9 @@ function Base() {
 						src={`/images/${collapsed ? 'logo_mini.svg' : 'logo.svg'}`} alt="巨硬AV" />
 					<Menu 
 						theme="dark" 
-						defaultSelectedKeys={['1']} 
-						mode="inline">
+						selectedKeys={[location.pathname]} 
+						mode="inline" 
+						onClick={handleClick}>
 						<Menu.Item 
 							key="/" 
 							icon={<HomeFilled />}>
@@ -56,7 +72,7 @@ function Base() {
 						</Menu.Item>
 						<SubMenu 
 							key="/video" 
-							icon={<TeamOutlined />} 
+							icon={<PlaySquareFilled />} 
 							title="视频">
 							<Menu.Item key="/video/list">视频列表</Menu.Item>
 							<Menu.Item key="/video/collect">视频采集</Menu.Item>
@@ -64,31 +80,30 @@ function Base() {
 						</SubMenu>
 						<Menu.Item 
 							key="/banner" 
-							icon={<DesktopOutlined />}>
+							icon={<PictureFilled />}>
 							Banner
 						</Menu.Item>
 						<Menu.Item 
 							key="/seo" 
-							icon={<DesktopOutlined />}>
+							icon={<GoogleSquareFilled />}>
 							SEO
 						</Menu.Item>
 						<Menu.Item 
 							key="/link" 
-							icon={<DesktopOutlined />}>
+							icon={<ApiFilled />}>
 							友链
 						</Menu.Item>
 						<Menu.Item 
 							key="/script" 
-							icon={<DesktopOutlined />}>
+							icon={<CodeFilled />}>
 							脚本代码
 						</Menu.Item>
 						<SubMenu 
 							key="/system" 
-							icon={<TeamOutlined />} 
+							icon={<SettingFilled />} 
 							title="系统">
 							<Menu.Item key="/system/user">用户</Menu.Item>
 							<Menu.Item key="/system/role">角色</Menu.Item>
-							<Menu.Item key="/system/permission">权限</Menu.Item>
 						</SubMenu>
 					</Menu>
 				</Sider>
@@ -125,8 +140,32 @@ function Base() {
 					</Header>
 					<Content>
 						<Switch>
-							<Route path="/about">
-								<About/>
+							<Route path="/video/list">
+								<VideoList/>
+							</Route>
+							<Route path="/video/collect">
+								<VideoCollect/>
+							</Route>
+							<Route path="/video/scan">
+								<VideoScan/>
+							</Route>
+							<Route path="/banner">
+								<Banner/>
+							</Route>
+							<Route path="/seo">
+								<SEO/>
+							</Route>
+							<Route path="/friendlink">
+								<FriendLink/>
+							</Route>
+							<Route path="/scriptcode">
+								<ScriptCode/>
+							</Route>
+							<Route path="/system/user">
+								<SysUser/>
+							</Route>
+							<Route path="/system/role">
+								<SysRole/>
 							</Route>
 							<Route path="/" exact>
 								<Index/>

@@ -1,8 +1,7 @@
 import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setToken } from '../store/actions'
-import { AppState } from '../store'
 import Admin from '../api/Admin'
 import { Res } from '../types'
 import { AxiosResponse } from 'axios'
@@ -11,8 +10,6 @@ import { useState } from 'react'
 
 
 function Login() {
-
-    const token = useSelector((state: AppState) => state.user.token)
     const dispatch = useDispatch()
     const history = useHistory()
     const [ loading, setLoading ] = useState(false)

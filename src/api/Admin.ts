@@ -1,6 +1,14 @@
 import { throttle } from 'lodash-decorators'
 import request from '../utils/request'
 
+
+export type AdminFindListParams = {
+    pageIndex: number, 
+    pageSize: number, 
+    adminStatus?: number, 
+    adminName?: string
+}
+
 class Admin {
     static url = '/admin'
 
@@ -15,6 +23,13 @@ class Admin {
 
     static getUserInfo() {
         return request({ url: this.url + '/userInfo '})
+    }
+
+    static findList(params: AdminFindListParams) {
+        return request({
+            url: this.url + '/findList',
+            params
+        })
     }
 }
 

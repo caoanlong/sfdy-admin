@@ -3,3 +3,5 @@
 @tailwind utilities;
 
 @import '~antd/dist/antd.css';
+
+::-webkit-scrollbar { width: 0 !important }
