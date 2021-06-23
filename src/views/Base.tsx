@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '../store'
 import { User } from '../types'
 import VideoList from './video/VideoList'
+import VideoTypes from './video/VideoTypes'
 import VideoCollect from './video/VideoCollect'
 import VideoScan from './video/VideoScan'
 import Banner from './Banner'
@@ -75,6 +76,7 @@ function Base() {
 							icon={<PlaySquareFilled />} 
 							title="视频">
 							<Menu.Item key="/video/list">视频列表</Menu.Item>
+							<Menu.Item key="/video/types">视频分类</Menu.Item>
 							<Menu.Item key="/video/collect">视频采集</Menu.Item>
 							<Menu.Item key="/video/scan">视频扫描删除</Menu.Item>
 						</SubMenu>
@@ -142,6 +144,9 @@ function Base() {
 						<Switch>
 							<Route path="/video/list">
 								<VideoList/>
+							</Route>
+							<Route path="/video/types">
+								<VideoTypes/>
 							</Route>
 							<Route path="/video/collect">
 								<VideoCollect/>

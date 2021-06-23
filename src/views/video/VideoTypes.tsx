@@ -29,7 +29,7 @@ const params: VodFindListParams = {
     vodClass: undefined
 }
 
-function VideoList() {
+function VideoTypes() {
 
     const dispatch = useDispatch()
     const types: VodType[] = useSelector((state: AppState) => state.vod.types)
@@ -238,4 +238,4 @@ function VideoList() {
     )
 }
 
-export default VideoList
+export default VideoTypes
