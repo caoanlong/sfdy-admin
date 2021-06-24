@@ -22,7 +22,7 @@ import VideoList from './video/VideoList'
 import VideoTypes from './video/VideoTypes'
 import VideoCollect from './video/VideoCollect'
 import VideoScan from './video/VideoScan'
-import Banner from './Banner'
+import BannerList from './banner/BannerList'
 import SEO from './SEO'
 import FriendLink from './FriendLink'
 import ScriptCode from './ScriptCode'
@@ -155,7 +155,7 @@ function Base() {
 								<VideoScan/>
 							</Route>
 							<Route path="/banner">
-								<Banner/>
+								<BannerList/>
 							</Route>
 							<Route path="/seo">
 								<SEO/>

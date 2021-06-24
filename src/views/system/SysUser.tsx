@@ -60,10 +60,12 @@ function SysUser() {
 
     const [ list, setList ] = useState([])
     const [ total, setTotal ] = useState(0)
+    const [ loading, setLoading ] = useState(false)
     let pageIndex = 1, pageSize = 10
     const [ form ] = Form.useForm()
 
     const getList = (data?: AdminFindListParams) => {
+        setLoading(true)
         AdminApi.findList({
             pageIndex,
             pageSize,
@@ -75,6 +77,7 @@ function SysUser() {
             }))
             setList(rows)
             setTotal(res.data.data.total)
+            setLoading(false)
         })
     }
 
@@ -90,7 +93,7 @@ function SysUser() {
     }, [])
 
     return (
-        <div>
+        <>
             <Form
                 name="advanced_search"
                 className="bg-white m-4 p-3 shadow"
@@ -134,6 +137,7 @@ function SysUser() {
                 className="bg-white m-4 p-3 shadow" 
                 columns={columns} 
                 dataSource={list} 
+                loading={loading}
                 pagination={{
                     total,
                     showSizeChanger: true,
@@ -147,7 +151,7 @@ function SysUser() {
                 }}
                 bordered>
             </Table>
-        </div>
+        </>
     )
 }
 

@@ -152,7 +152,7 @@ function VideoList() {
     ]
 
     return (
-        <div>
+        <>
             <Form
                 name="advanced_search"
                 className="bg-white m-4 p-3 shadow"
@@ -234,7 +234,7 @@ function VideoList() {
                 }}
                 bordered>
             </Table>
-        </div>
+        </>
     )
 }
 

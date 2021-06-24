@@ -15,6 +15,14 @@ class VodTypeApi {
             url: this.url + '/findAll'
         })
     }
+
+    static del(data: { typeId: number }) {
+        return request({
+            url: this.url + '/del',
+            method: 'post',
+            data
+        })
+    }
 }
 
 export default VodTypeApi

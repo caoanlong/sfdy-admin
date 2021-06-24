@@ -83,3 +83,13 @@ export type VodType = {
     typeExtendJson?: TypeExtend,
     classList: string[]
 }
+
+export type Banner = {
+    bannerId: number,
+    bannerType: number,
+    bannerName: string,
+    bannerSort: number,
+    bannerTime: number,
+    bannerUrl: string,
+    bannerLink: string
+}

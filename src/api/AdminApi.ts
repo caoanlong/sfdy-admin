@@ -1,4 +1,3 @@
-import { throttle } from 'lodash-decorators'
 import request from '../utils/request'
 
 
@@ -12,7 +11,6 @@ export type AdminFindListParams = {
 class AdminApi {
     static url = '/admin'
 
-    @throttle(1000)
     static login(data: { adminName: string, adminPwd: string }) {
         return request({
             url: this.url + '/login',
