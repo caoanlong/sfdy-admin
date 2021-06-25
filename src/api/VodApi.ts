@@ -1,4 +1,3 @@
-import { throttle } from 'lodash-decorators'
 import request from '../utils/request'
 
 
@@ -10,7 +9,7 @@ export type VodFindListParams = {
     vodClass?: string
 }
 
-class Vod {
+class VodApi {
     static url = '/vod'
 
     static findList(params?: VodFindListParams) {
@@ -28,4 +27,4 @@ class Vod {
     }
 }
 
-export default Vod
+export default VodApi

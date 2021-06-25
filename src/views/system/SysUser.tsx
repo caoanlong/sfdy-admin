@@ -90,7 +90,7 @@ function SysUser() {
 
     useEffect(() => {
         getList()
-    }, [])
+    })
 
     return (
         <>

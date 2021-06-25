@@ -85,11 +85,22 @@ export type VodType = {
 }
 
 export type Banner = {
-    bannerId: number,
+    bannerId?: number,
     bannerType: number,
     bannerName: string,
     bannerSort: number,
-    bannerTime: number,
+    bannerTime?: Date,
     bannerUrl: string,
-    bannerLink: string
+    bannerLink?: string
+}
+
+export type Link = {
+    linkId?: number,
+    linkType?: number,
+    linkName: string,
+    linkSort: number,
+    linkAddTime?: number,
+    linkTime?: number,
+    linkUrl: string,
+    linkLogo?: string
 }

@@ -15,7 +15,6 @@ import { useEffect, useState } from "react"
 import dayjs from 'dayjs'
 import VodApi, { VodFindListParams } from "../../api/VodApi"
 import { Vod, VodType } from "../../types"
-import VodTypeApi from "../../api/VodTypeApi"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchTypes } from "../../store/actions"
 import { AppState } from "../../store"

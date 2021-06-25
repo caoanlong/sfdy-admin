@@ -10,7 +10,8 @@ import {
 	PictureFilled,
 	CodeFilled,
 	GoogleSquareFilled,
-	ApiFilled
+	ApiFilled,
+	AppstoreFilled
   } from '@ant-design/icons'
 import Index from './Index'
 import React, { useEffect, useState } from 'react'
@@ -24,7 +25,7 @@ import VideoCollect from './video/VideoCollect'
 import VideoScan from './video/VideoScan'
 import BannerList from './banner/BannerList'
 import SEO from './SEO'
-import FriendLink from './FriendLink'
+import FriendLinkList from './friendLink/FriendLinkList'
 import ScriptCode from './ScriptCode'
 import SysUser from './system/SysUser'
 import SysRole from './system/SysRole'
@@ -86,19 +87,24 @@ function Base() {
 							Banner
 						</Menu.Item>
 						<Menu.Item 
-							key="/seo" 
-							icon={<GoogleSquareFilled />}>
-							SEO
-						</Menu.Item>
-						<Menu.Item 
 							key="/link" 
 							icon={<ApiFilled />}>
 							友链
 						</Menu.Item>
 						<Menu.Item 
+							key="/seo" 
+							icon={<GoogleSquareFilled />}>
+							SEO
+						</Menu.Item>
+						<Menu.Item 
 							key="/script" 
 							icon={<CodeFilled />}>
 							脚本代码
+						</Menu.Item>
+						<Menu.Item 
+							key="/appversion" 
+							icon={<AppstoreFilled />}>
+							APP版本
 						</Menu.Item>
 						<SubMenu 
 							key="/system" 
@@ -160,8 +166,8 @@ function Base() {
 							<Route path="/seo">
 								<SEO/>
 							</Route>
-							<Route path="/friendlink">
-								<FriendLink/>
+							<Route path="/link">
+								<FriendLinkList/>
 							</Route>
 							<Route path="/scriptcode">
 								<ScriptCode/>

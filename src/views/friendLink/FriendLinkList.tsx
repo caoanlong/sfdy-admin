@@ -14,38 +14,32 @@ import {
 import { PlusOutlined } from '@ant-design/icons'
 import { useEffect, useState } from "react"
 import dayjs from 'dayjs'
-import BannerApi, { BannerFindListParams } from "../../api/BannerApi"
-import { Banner } from "../../types"
-import BannerAdd from "./BannerAdd"
-import BannerEdit from "./BannerEdit"
+import { Link } from "../../types"
+import LinkAdd from "./LinkAdd"
+import LinkEdit from "./LinkEdit"
+import LinkApi, { LinkFindListParams } from "../../api/LinkApi"
 
-export const BANNER_TYPES: { [key: string]: string} = {
-    '1': '全部',
-    '2': 'H5',
-    '3': 'APP'
-}
-
-
-const params: BannerFindListParams = {
+const params: LinkFindListParams = {
     pageIndex: 1,
     pageSize: 10,
-    bannerName: undefined
+    linkName: undefined
 }
-function BannerList() {
+
+function FriendLink() {
     const [ loading, setLoading ] = useState(false)
-    const [ list, setList ] = useState<Banner[]>([])
+    const [ list, setList ] = useState<Link[]>([])
     const [ total, setTotal ] = useState(0)
     const [ form ] = Form.useForm()
     const [ isAddModalVisible, setIsAddModalVisible ] = useState(false)
     const [ isEditModalVisible, setIsEditModalVisible ] = useState(false)
-    const [ currentBannerId, setCurrentBannerId ] = useState<number>()
-    
+    const [ currentLinkId, setCurrentLinkId ] = useState<number>()
+
     const getList = () => {
         setLoading(true)
-        BannerApi.findList(params).then(res => {
+        LinkApi.findList(params).then(res => {
             setTotal(res.data.data.total)
-            const rows = res.data.data.list.map((item: Banner) => ({
-                key: item.bannerId,
+            const rows = res.data.data.list.map((item: Link) => ({
+                key: item.linkId,
                 ...item
             }))
             setList(rows)
@@ -53,23 +47,23 @@ function BannerList() {
         })
     }
 
-    const onFinish = ({ bannerName }: any) => {
-        params.bannerName = bannerName || undefined
+    const onFinish = ({ linkName }: any) => {
+        params.linkName = linkName || undefined
         getList()
     }
 
-    const del = (item: Banner) => {
-        if (!item.bannerId) {
-            message.error('bannerId不能为空！')
+    const del = (item: Link) => {
+        if (!item.linkId) {
+            message.error('linkId不能为空！')
             return
         }
-        BannerApi.del({ bannerId: item.bannerId }).then(res => {
-            message.success('成功删除:' + item.bannerName)
+        LinkApi.del({ linkId: item.linkId }).then(res => {
+            message.success('成功删除:' + item.linkName)
             getList()
         })
     }
     const handleEdit = (bannerId?: number) => {
-        setCurrentBannerId(bannerId)
+        setCurrentLinkId(bannerId)
         setIsEditModalVisible(true)
     }
     const handleAddOk = () => {
@@ -88,48 +82,42 @@ function BannerList() {
     const columns = [
         {
             title: '编号',
-            dataIndex: 'bannerId',
-            key: 'bannerId',
+            dataIndex: 'linkId',
+            key: 'linkId',
             width: 90
         },{
             title: '名称',
-            dataIndex: 'bannerName',
-            key: 'bannerName',
+            dataIndex: 'linkName',
+            key: 'linkName',
             ellipsis: true
         },{
-            title: '类型',
-            dataIndex: 'bannerType',
-            key: 'bannerType',
-            width: 110,
-            render: (type: number) => (BANNER_TYPES[type])
-        },{
             title: '排序',
-            dataIndex: 'bannerSort',
-            key: 'bannerSort',
+            dataIndex: 'linkSort',
+            key: 'linkSort',
             width: 80
         },{
             title: '跳转链接',
-            dataIndex: 'bannerLink',
-            key: 'bannerLink',
+            dataIndex: 'linkUrl',
+            key: 'linkUrl',
             ellipsis: true
         },{
             title: '更新时间',
-            dataIndex: 'bannerTime',
-            key: 'bannerTime',
+            dataIndex: 'linkTime',
+            key: 'linkTime',
             width: 180,
-            render: (time: Date) => {
-                return (<span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>)
+            render: (time: number) => {
+                return (<span>{dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>)
             }
         },{
             title: '操作',
             key: 'action',
             width: 140,
-            render: (text: any, record: Banner) => (
+            render: (text: any, record: Link) => (
               <Space size="middle">
                 <Tag 
                     color="#2db7f5" 
                     className="cursor-pointer" 
-                    onClick={() => handleEdit(record?.bannerId)}>
+                    onClick={() => handleEdit(record?.linkId)}>
                     编辑
                 </Tag>
                 <Popconfirm
@@ -154,8 +142,8 @@ function BannerList() {
                 form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
-                    <Col span={6} key="bannerName">
-                        <Form.Item name="bannerName" label="名称">
+                    <Col span={6} key="linkName">
+                        <Form.Item name="linkName" label="名称">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
@@ -177,7 +165,7 @@ function BannerList() {
                             className="mx-2"
                             onClick={() => {
                                 form.resetFields()
-                                params.bannerName = undefined
+                                params.linkName = undefined
                                 getList()
                             }}>
                             重置
@@ -203,21 +191,21 @@ function BannerList() {
                 bordered>
             </Table>
             <Modal 
-                title="添加Banner" 
+                title="添加友链" 
                 width={700}
                 visible={isAddModalVisible} 
                 footer={null}>
-                <BannerAdd 
+                <LinkAdd 
                     handleOk={handleAddOk} 
                     handleCancel={() => setIsAddModalVisible(false)} />
             </Modal>
             <Modal 
-                title="修改Banner" 
+                title="修改友链" 
                 width={700}
                 visible={isEditModalVisible} 
                 footer={null}>
-                <BannerEdit 
-                    bannerId={currentBannerId}
+                <LinkEdit 
+                    linkId={currentLinkId}
                     handleOk={handleEditOk} 
                     handleCancel={() => setIsEditModalVisible(false)} />
             </Modal>
@@ -225,4 +213,4 @@ function BannerList() {
     )
 }
 
-export default BannerList
+export default FriendLink

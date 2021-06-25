@@ -8,7 +8,6 @@ import {
 import { useEffect, useState } from "react"
 import { VodType } from "../../types"
 import VodTypeApi from "../../api/VodTypeApi"
-import { useDispatch } from "react-redux"
 
 function VideoTypes() {
 

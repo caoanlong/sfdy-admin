@@ -1,43 +1,43 @@
-import { Banner } from '../types'
+import { Link } from '../types'
 import request from '../utils/request'
 
 
-export type BannerFindListParams = {
+export type LinkFindListParams = {
     pageIndex?: number, 
     pageSize?: number,
-    bannerName?: string
+    linkName?: string
 }
 
-class BannerApi {
-    static url = '/banner'
+class LinkApi {
+    static url = '/link'
 
-    static findList(params?: BannerFindListParams) {
+    static findList(params?: LinkFindListParams) {
         return request({
             url: this.url + '/findList',
             params
         })
     }
-    static findById(params: { bannerId?: number }) {
+    static findById(params: { linkId?: number }) {
         return request({
             url: this.url + '/findById',
             params
         })
     }
-    static add(data: Banner) {
+    static add(data: Link) {
         return request({
             url: this.url + '/add',
             method: 'post',
             data
         })
     }
-    static update(data: Banner) {
+    static update(data: Link) {
         return request({
             url: this.url + '/update',
             method: 'post',
             data
         })
     }
-    static del(data: { bannerId?: number }) {
+    static del(data: { linkId?: number }) {
         return request({
             url: this.url + '/del',
             method: 'post',
@@ -46,4 +46,4 @@ class BannerApi {
     }
 }
 
-export default BannerApi
+export default LinkApi

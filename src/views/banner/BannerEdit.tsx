@@ -16,12 +16,14 @@ import dayjs from "dayjs"
 import BannerApi from "../../api/BannerApi"
 import { Banner } from "../../types"
 
-type BannerAddProps = {
+
+type BannerEditProps = {
+    bannerId?: number,
     handleOk: Function, 
     handleCancel: Function
 }
 
-function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
+function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     const [ form ] = Form.useForm()
     const [ types, setTypes ] = useState<{key: string, value: string}[]>([])
     const [ uploadLoading, setUploadLoading ] = useState(false)
@@ -32,16 +34,17 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     }
     const onFinish = (values: any) => {
         const data: Banner = {
+            bannerId,
             bannerType: values.bannerType,
             bannerName: values.bannerName,
             bannerSort: values.bannerSort,
-            bannerUrl: values.bannerUrl
+            bannerUrl: values.bannerUrl,
         }
         if (values.bannerLink) {
             data.bannerLink = values.bannerLink
         }
-        BannerApi.add(data).then(res => {
-            message.success('添加成功！')
+        BannerApi.update(data).then(res => {
+            message.success('修改成功！')
             handleOk()
         })
     }
@@ -71,16 +74,29 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
         }
     }
 
+    const getInfo = () => {
+        BannerApi.findById({ bannerId }).then(res => {
+            const banner: Banner = res.data.data
+            form.setFieldsValue({ bannerType: banner.bannerType.toString() })
+            form.setFieldsValue({ bannerName: banner.bannerName })
+            form.setFieldsValue({ bannerSort: banner.bannerSort })
+            form.setFieldsValue({ bannerUrl: banner.bannerUrl })
+            if (banner.bannerLink) {
+                form.setFieldsValue({ bannerLink: banner.bannerLink })
+            }
+            setImageUrl(banner.bannerUrl)
+        })
+    }
+
     useEffect(() => {
         const list = Object.keys(BANNER_TYPES).map((key: string) => ({ key, value: BANNER_TYPES[key]}))
         setTypes(list)
-        form.setFieldsValue({ bannerType: '1' })
-        form.setFieldsValue({ bannerSort: 1 })
+        getInfo()
     }, [])
 
     return (
         <Form
-            name="bannerAdd"
+            name="bannerEdit"
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
@@ -140,4 +156,4 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     )
 }
 
-export default BannerAdd
+export default BannerEdit

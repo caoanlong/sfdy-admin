@@ -10,20 +10,19 @@ import {
 } from "antd"
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { BANNER_TYPES } from "./BannerList"
 import { storage } from "../../index"
 import dayjs from "dayjs"
-import BannerApi from "../../api/BannerApi"
-import { Banner } from "../../types"
+import { Link } from "../../types"
+import LinkApi from "../../api/LinkApi"
 
-type BannerAddProps = {
+type LinkEditProps = {
+    linkId?: number,
     handleOk: Function, 
     handleCancel: Function
 }
 
-function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
+function LinkEdit({ linkId, handleOk, handleCancel }: LinkEditProps) {
     const [ form ] = Form.useForm()
-    const [ types, setTypes ] = useState<{key: string, value: string}[]>([])
     const [ uploadLoading, setUploadLoading ] = useState(false)
     const [ imageUrl, setImageUrl ] = useState<string>('')
 
@@ -31,16 +30,17 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
         handleCancel()
     }
     const onFinish = (values: any) => {
-        const data: Banner = {
-            bannerType: values.bannerType,
-            bannerName: values.bannerName,
-            bannerSort: values.bannerSort,
-            bannerUrl: values.bannerUrl
+        const data: Link = {
+            linkId,
+            linkName: values.linkName,
+            linkSort: values.linkSort,
+            linkUrl: values.linkUrl,
+            linkType: 0
         }
-        if (values.bannerLink) {
-            data.bannerLink = values.bannerLink
+        if (values.linkLogo) {
+            data.linkLogo = values.linkLogo
         }
-        BannerApi.add(data).then(res => {
+        LinkApi.update(data).then(res => {
             message.success('添加成功！')
             handleOk()
         })
@@ -60,61 +60,59 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
                 return
             }
             setUploadLoading(true)
-            const bannersRef = storage.ref().child('banners/' + dayjs().format('YYYY_MM_DD-HH_mm_ss') + '_' + Math.random())
-            bannersRef.put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(bannerUrl => {
-                    setImageUrl(bannerUrl)
-                    form.setFieldsValue({ bannerUrl })
+            const linksRef = storage.ref().child('links/' + dayjs().format('YYYY_MM_DD-HH_mm_ss') + '_' + Math.random())
+            linksRef.put(file).then(snapshot => {
+                snapshot.ref.getDownloadURL().then(linkLogo => {
+                    setImageUrl(linkLogo)
+                    form.setFieldsValue({ linkLogo })
                     setUploadLoading(false)
                 })
             })
         }
     }
 
+    const getInfo = () => {
+        LinkApi.findById({ linkId }).then(res => {
+            const link: Link = res.data.data
+            form.setFieldsValue({ linkName: link.linkName })
+            form.setFieldsValue({ linkSort: link.linkSort })
+            form.setFieldsValue({ linkUrl: link.linkUrl })
+            if (link.linkLogo) {
+                form.setFieldsValue({ linkLogo: link.linkLogo })
+                setImageUrl(link.linkLogo)
+            }
+        })
+    }
+
     useEffect(() => {
-        const list = Object.keys(BANNER_TYPES).map((key: string) => ({ key, value: BANNER_TYPES[key]}))
-        setTypes(list)
-        form.setFieldsValue({ bannerType: '1' })
-        form.setFieldsValue({ bannerSort: 1 })
+        form.setFieldsValue({ linkSort: 1 })
+        getInfo()
     }, [])
 
     return (
         <Form
-            name="bannerAdd"
+            name="linkEdit"
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
             <Form.Item 
-                name="bannerType" 
-                label="类型" 
-                rules={[{ required: true, message: '类型不能为空!' }]}>
-                <Select
-                    placeholder="请选择"
-                    allowClear>
-                    {
-                        types.map((type: {key: string, value: string}) => (
-                            <Select.Option 
-                                key={type.key} 
-                                value={type.key}>
-                                { type.value }
-                            </Select.Option>
-                        ))
-                    }
-                </Select>
-            </Form.Item>
-            <Form.Item 
-                name="bannerName" 
+                name="linkName" 
                 label="名称" 
                 rules={[{ required: true, message: '名称不能为空!' }]}>
                 <Input placeholder="请输入..."/>
             </Form.Item>
-            <Form.Item name="bannerSort" label="排序">
+            <Form.Item 
+                name="linkUrl" 
+                label="跳转链接" 
+                rules={[{ required: true, message: '名称不能为空!' }]}>
+                <Input placeholder="https://..."/>
+            </Form.Item>
+            <Form.Item name="linkSort" label="排序">
                 <InputNumber min={1} max={100} />
             </Form.Item>
             <Form.Item 
-                name="bannerUrl" 
-                label="图片" 
-                rules={[{ required: true, message: 'banner图片不能为空!' }]}>
+                name="linkLogo" 
+                label="友链LOGO">
                 <div 
                     className="w-96 h-36 bg-gray-100 border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400" 
                     style={{borderWidth: '1px'}}>
@@ -127,9 +125,6 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
                     { uploadLoading ? <LoadingOutlined /> : <PlusOutlined /> }
                 </div>
             </Form.Item>
-            <Form.Item name="bannerLink" label="跳转链接">
-                <Input placeholder="https://..."/>
-            </Form.Item>
             <Row>
                 <Col span={24} className="text-right">
                     <Button className="mr-3" onClick={onCancel}>取消</Button>
@@ -140,4 +135,4 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     )
 }
 
-export default BannerAdd
+export default LinkEdit
