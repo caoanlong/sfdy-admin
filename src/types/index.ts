@@ -104,3 +104,12 @@ export type Link = {
     linkUrl: string,
     linkLogo?: string
 }
+
+export type Seo = {
+    seoId?: number,
+    seoTitle?: string,
+    seoKeywords?: string,
+    seoDescription?: string,
+    seoTime?: Date,
+    seoScript?: string,
+}

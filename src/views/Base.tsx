@@ -97,7 +97,7 @@ function Base() {
 							SEO
 						</Menu.Item>
 						<Menu.Item 
-							key="/script" 
+							key="/scriptcode" 
 							icon={<CodeFilled />}>
 							脚本代码
 						</Menu.Item>
