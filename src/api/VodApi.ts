@@ -6,7 +6,8 @@ export type VodFindListParams = {
     pageSize?: number,
     vodName?: string,
     typeId?: number,
-    vodClass?: string
+    vodClass?: string,
+    status?: number
 }
 
 class VodApi {
@@ -23,6 +24,13 @@ class VodApi {
             url: this.url + '/del',
             method: 'post',
             data
+        })
+    }
+
+    static delUnPlay() {
+        return request({
+            url: this.url + '/delUnPlay',
+            method: 'post'
         })
     }
 }

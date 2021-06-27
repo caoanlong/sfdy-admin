@@ -78,8 +78,8 @@ function Base() {
 							title="视频">
 							<Menu.Item key="/video/list">视频列表</Menu.Item>
 							<Menu.Item key="/video/types">视频分类</Menu.Item>
+							<Menu.Item key="/video/scan">视频扫描</Menu.Item>
 							<Menu.Item key="/video/collect">视频采集</Menu.Item>
-							<Menu.Item key="/video/scan">视频扫描删除</Menu.Item>
 						</SubMenu>
 						<Menu.Item 
 							key="/banner" 

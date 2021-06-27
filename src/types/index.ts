@@ -55,7 +55,9 @@ export type Vod = {
     vodPlayFrom: string,
     vodPlayServer: string,
     vodPlayUrl: string,
-    vodPlot: number
+    vodPlot: number,
+    status?: number,
+    loading?: boolean
 }
 
 type TypeExtend = {
