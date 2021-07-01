@@ -5,15 +5,13 @@ import {
     message, 
     Row,
     Col,
-    Select,
     InputNumber
 } from "antd"
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { storage } from "../../index"
-import dayjs from "dayjs"
 import { Link } from "../../types"
 import LinkApi from "../../api/LinkApi"
+import { formDataReq } from "../../utils/tools"
 
 type LinkAddProps = {
     handleOk: Function, 
@@ -22,8 +20,8 @@ type LinkAddProps = {
 
 function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
     const [ form ] = Form.useForm()
-    const [ uploadLoading, setUploadLoading ] = useState(false)
     const [ imageUrl, setImageUrl ] = useState<string>('')
+    const [ linkFile, setLinkFile ] = useState<File>()
 
     const onCancel = () => {
         handleCancel()
@@ -36,9 +34,10 @@ function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
             linkType: 0
         }
         if (values.linkLogo) {
-            data.linkLogo = values.linkLogo
+            data.linkFile = linkFile
         }
-        LinkApi.add(data).then(res => {
+        const formData = formDataReq(data)
+        LinkApi.add(formData).then(res => {
             message.success('添加成功！')
             handleOk()
         })
@@ -57,15 +56,9 @@ function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
                 message.error('图片必须小于5MB!')
                 return
             }
-            setUploadLoading(true)
-            const linksRef = storage.ref().child('links/' + dayjs().format('YYYY_MM_DD-HH_mm_ss') + '_' + Math.random())
-            linksRef.put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(linkLogo => {
-                    setImageUrl(linkLogo)
-                    form.setFieldsValue({ linkLogo })
-                    setUploadLoading(false)
-                })
-            })
+            setImageUrl(window.URL.createObjectURL(file))
+            setLinkFile(file)
+            form.setFieldsValue({'linkLogo': file})
         }
     }
 
@@ -106,7 +99,7 @@ function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
                         ? <img className="w-full h-full block absolute z-10" src={imageUrl} />
                         : <></>
                     }
-                    { uploadLoading ? <LoadingOutlined /> : <PlusOutlined /> }
+                    <PlusOutlined />
                 </div>
             </Form.Item>
             <Row>

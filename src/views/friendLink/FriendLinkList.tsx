@@ -190,25 +190,34 @@ function FriendLink() {
                 }}
                 bordered>
             </Table>
-            <Modal 
-                title="添加友链" 
-                width={700}
-                visible={isAddModalVisible} 
-                footer={null}>
-                <LinkAdd 
-                    handleOk={handleAddOk} 
-                    handleCancel={() => setIsAddModalVisible(false)} />
-            </Modal>
-            <Modal 
-                title="修改友链" 
-                width={700}
-                visible={isEditModalVisible} 
-                footer={null}>
-                <LinkEdit 
-                    linkId={currentLinkId}
-                    handleOk={handleEditOk} 
-                    handleCancel={() => setIsEditModalVisible(false)} />
-            </Modal>
+            {
+                isAddModalVisible
+                    ? <Modal 
+                        title="添加友链" 
+                        width={700}
+                        visible={isAddModalVisible} 
+                        footer={null}>
+                        <LinkAdd 
+                            handleOk={handleAddOk} 
+                            handleCancel={() => setIsAddModalVisible(false)} />
+                    </Modal>
+                    : <></>
+            }
+            {
+                isEditModalVisible
+                    ? <Modal 
+                        title="修改友链" 
+                        width={700}
+                        visible={isEditModalVisible} 
+                        footer={null}>
+                        <LinkEdit 
+                            linkId={currentLinkId}
+                            handleOk={handleEditOk} 
+                            handleCancel={() => setIsEditModalVisible(false)} />
+                    </Modal>
+                    : <></>
+            }
+            
         </>
     )
 }

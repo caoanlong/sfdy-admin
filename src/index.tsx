@@ -6,22 +6,6 @@ import { store, persistor } from './store'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import firebase from "firebase/app"
-import "firebase/storage"
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBu0HZe7ZFXBh_gBkfqXoMwAP-hjZQ9jZ0",
-  authDomain: "jyav-3728d.firebaseapp.com",
-  databaseURL: "https://jyav-3728d-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "jyav-3728d",
-  storageBucket: "jyav-3728d.appspot.com",
-  messagingSenderId: "464543886366",
-  appId: "1:464543886366:web:23b57381b8d8aaf7fa920f",
-  measurementId: "G-H0S6J67LXG"
-}
-
-firebase.initializeApp(firebaseConfig)
-export const storage = firebase.storage()
 
 ReactDOM.render(
   <React.StrictMode>

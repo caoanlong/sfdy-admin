@@ -8,13 +8,12 @@ import {
     Select,
     InputNumber
 } from "antd"
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { BANNER_TYPES } from "./BannerList"
-import { storage } from "../../index"
-import dayjs from "dayjs"
 import BannerApi from "../../api/BannerApi"
 import { Banner } from "../../types"
+import { formDataReq } from "../../utils/tools"
 
 type BannerAddProps = {
     handleOk: Function, 
@@ -24,8 +23,8 @@ type BannerAddProps = {
 function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     const [ form ] = Form.useForm()
     const [ types, setTypes ] = useState<{key: string, value: string}[]>([])
-    const [ uploadLoading, setUploadLoading ] = useState(false)
     const [ imageUrl, setImageUrl ] = useState<string>('')
+    const [ bannerFile, setBannerFile ] = useState<File>()
 
     const onCancel = () => {
         handleCancel()
@@ -35,12 +34,13 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
             bannerType: values.bannerType,
             bannerName: values.bannerName,
             bannerSort: values.bannerSort,
-            bannerUrl: values.bannerUrl
+            bannerFile
         }
         if (values.bannerLink) {
             data.bannerLink = values.bannerLink
         }
-        BannerApi.add(data).then(res => {
+        const formData = formDataReq(data)
+        BannerApi.add(formData).then(res => {
             message.success('添加成功！')
             handleOk()
         })
@@ -48,7 +48,7 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
 
     const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target && e.target.files) {
-            const file = e.target.files[0]
+            const file: File = e.target.files[0]
             const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
             if (!isJpgOrPng) {
                 message.error('只支持JPG/PNG文件')
@@ -59,15 +59,9 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
                 message.error('图片必须小于5MB!')
                 return
             }
-            setUploadLoading(true)
-            const bannersRef = storage.ref().child('banners/' + dayjs().format('YYYY_MM_DD-HH_mm_ss') + '_' + Math.random())
-            bannersRef.put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(bannerUrl => {
-                    setImageUrl(bannerUrl)
-                    form.setFieldsValue({ bannerUrl })
-                    setUploadLoading(false)
-                })
-            })
+            setImageUrl(window.URL.createObjectURL(file))
+            setBannerFile(file)
+            form.setFieldsValue({'bannerUrl': file})
         }
     }
 
@@ -124,7 +118,7 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
                         ? <img className="w-full h-full block absolute z-10" src={imageUrl} />
                         : <></>
                     }
-                    { uploadLoading ? <LoadingOutlined /> : <PlusOutlined /> }
+                    <PlusOutlined />
                 </div>
             </Form.Item>
             <Form.Item name="bannerLink" label="跳转链接">

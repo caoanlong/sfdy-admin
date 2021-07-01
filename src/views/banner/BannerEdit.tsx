@@ -8,13 +8,13 @@ import {
     Select,
     InputNumber
 } from "antd"
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { BANNER_TYPES } from "./BannerList"
-import { storage } from "../../index"
-import dayjs from "dayjs"
 import BannerApi from "../../api/BannerApi"
 import { Banner } from "../../types"
+import { formDataReq } from "../../utils/tools"
+import { SITE_NAME } from "../../utils/consts"
 
 
 type BannerEditProps = {
@@ -26,8 +26,8 @@ type BannerEditProps = {
 function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     const [ form ] = Form.useForm()
     const [ types, setTypes ] = useState<{key: string, value: string}[]>([])
-    const [ uploadLoading, setUploadLoading ] = useState(false)
     const [ imageUrl, setImageUrl ] = useState<string>('')
+    const [ bannerFile, setBannerFile ] = useState<File>()
 
     const onCancel = () => {
         handleCancel()
@@ -38,12 +38,13 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
             bannerType: values.bannerType,
             bannerName: values.bannerName,
             bannerSort: values.bannerSort,
-            bannerUrl: values.bannerUrl,
+            bannerFile,
         }
         if (values.bannerLink) {
             data.bannerLink = values.bannerLink
         }
-        BannerApi.update(data).then(res => {
+        const formData = formDataReq(data)
+        BannerApi.update(formData).then(res => {
             message.success('修改成功！')
             handleOk()
         })
@@ -62,15 +63,9 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
                 message.error('图片必须小于5MB!')
                 return
             }
-            setUploadLoading(true)
-            const bannersRef = storage.ref().child('banners/' + dayjs().format('YYYY_MM_DD-HH_mm_ss') + '_' + Math.random())
-            bannersRef.put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(bannerUrl => {
-                    setImageUrl(bannerUrl)
-                    form.setFieldsValue({ bannerUrl })
-                    setUploadLoading(false)
-                })
-            })
+            setImageUrl(window.URL.createObjectURL(file))
+            setBannerFile(file)
+            form.setFieldsValue({bannerUrl: file})
         }
     }
 
@@ -80,15 +75,18 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
             form.setFieldsValue({ bannerType: banner.bannerType.toString() })
             form.setFieldsValue({ bannerName: banner.bannerName })
             form.setFieldsValue({ bannerSort: banner.bannerSort })
-            form.setFieldsValue({ bannerUrl: banner.bannerUrl })
             if (banner.bannerLink) {
                 form.setFieldsValue({ bannerLink: banner.bannerLink })
             }
-            setImageUrl(banner.bannerUrl)
+            if (banner.bannerUrl) {
+                setImageUrl(SITE_NAME + banner.bannerUrl)
+                form.setFieldsValue({ bannerUrl: banner.bannerUrl })
+            }
         })
     }
 
     useEffect(() => {
+        setImageUrl('')
         const list = Object.keys(BANNER_TYPES).map((key: string) => ({ key, value: BANNER_TYPES[key]}))
         setTypes(list)
         getInfo()
@@ -140,7 +138,7 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
                         ? <img className="w-full h-full block absolute z-10" src={imageUrl} />
                         : <></>
                     }
-                    { uploadLoading ? <LoadingOutlined /> : <PlusOutlined /> }
+                    <PlusOutlined />
                 </div>
             </Form.Item>
             <Form.Item name="bannerLink" label="跳转链接">

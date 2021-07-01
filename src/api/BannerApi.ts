@@ -1,4 +1,4 @@
-import { Banner } from '../types'
+
 import request from '../utils/request'
 
 
@@ -23,18 +23,20 @@ class BannerApi {
             params
         })
     }
-    static add(data: Banner) {
+    static add(data: FormData) {
         return request({
             url: this.url + '/add',
             method: 'post',
-            data
+            data,
+            headers: { 'Content-type': 'multipart/form-data;charset=UTF-8' }
         })
     }
-    static update(data: Banner) {
+    static update(data: FormData) {
         return request({
             url: this.url + '/update',
             method: 'post',
-            data
+            data,
+            headers: { 'Content-type': 'multipart/form-data;charset=UTF-8' },
         })
     }
     static del(data: { bannerId?: number }) {

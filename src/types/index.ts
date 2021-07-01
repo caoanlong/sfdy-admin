@@ -92,7 +92,8 @@ export type Banner = {
     bannerName: string,
     bannerSort: number,
     bannerTime?: Date,
-    bannerUrl: string,
+    bannerFile?: File,
+    bannerUrl?: string,
     bannerLink?: string
 }
 
@@ -104,7 +105,8 @@ export type Link = {
     linkAddTime?: number,
     linkTime?: number,
     linkUrl: string,
-    linkLogo?: string
+    linkLogo?: string,
+    linkFile?: File
 }
 
 export type Seo = {

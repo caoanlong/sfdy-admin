@@ -1,4 +1,4 @@
-import { Link } from '../types'
+
 import request from '../utils/request'
 
 
@@ -23,14 +23,14 @@ class LinkApi {
             params
         })
     }
-    static add(data: Link) {
+    static add(data: FormData) {
         return request({
             url: this.url + '/add',
             method: 'post',
             data
         })
     }
-    static update(data: Link) {
+    static update(data: FormData) {
         return request({
             url: this.url + '/update',
             method: 'post',

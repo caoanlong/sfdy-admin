@@ -202,25 +202,34 @@ function BannerList() {
                 }}
                 bordered>
             </Table>
-            <Modal 
-                title="添加Banner" 
-                width={700}
-                visible={isAddModalVisible} 
-                footer={null}>
-                <BannerAdd 
-                    handleOk={handleAddOk} 
-                    handleCancel={() => setIsAddModalVisible(false)} />
-            </Modal>
-            <Modal 
-                title="修改Banner" 
-                width={700}
-                visible={isEditModalVisible} 
-                footer={null}>
-                <BannerEdit 
-                    bannerId={currentBannerId}
-                    handleOk={handleEditOk} 
-                    handleCancel={() => setIsEditModalVisible(false)} />
-            </Modal>
+            {
+                isAddModalVisible
+                    ? <Modal 
+                    title="添加Banner" 
+                    width={700}
+                    visible={isAddModalVisible} 
+                    footer={null}>
+                    <BannerAdd 
+                        handleOk={handleAddOk} 
+                        handleCancel={() => setIsAddModalVisible(false)} />
+                </Modal>
+                : <></>
+            }
+            {
+                isEditModalVisible
+                    ? <Modal 
+                        title="修改Banner" 
+                        width={700}
+                        visible={isEditModalVisible} 
+                        footer={null}>
+                        <BannerEdit 
+                            bannerId={currentBannerId}
+                            handleOk={handleEditOk} 
+                            handleCancel={() => setIsEditModalVisible(false)} />
+                    </Modal>
+                    : <></>
+            }
+            
         </>
     )
 }
