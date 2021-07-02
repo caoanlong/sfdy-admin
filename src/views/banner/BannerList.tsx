@@ -206,6 +206,7 @@ function BannerList() {
                 isAddModalVisible
                     ? <Modal 
                     title="添加Banner" 
+                    closable={false}
                     width={700}
                     visible={isAddModalVisible} 
                     footer={null}>
@@ -219,6 +220,7 @@ function BannerList() {
                 isEditModalVisible
                     ? <Modal 
                         title="修改Banner" 
+                        closable={false}
                         width={700}
                         visible={isEditModalVisible} 
                         footer={null}>

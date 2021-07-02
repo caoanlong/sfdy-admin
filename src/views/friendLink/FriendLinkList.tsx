@@ -194,6 +194,7 @@ function FriendLink() {
                 isAddModalVisible
                     ? <Modal 
                         title="添加友链" 
+                        closable={false}
                         width={700}
                         visible={isAddModalVisible} 
                         footer={null}>
@@ -207,6 +208,7 @@ function FriendLink() {
                 isEditModalVisible
                     ? <Modal 
                         title="修改友链" 
+                        closable={false}
                         width={700}
                         visible={isEditModalVisible} 
                         footer={null}>

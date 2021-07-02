@@ -41,10 +41,6 @@ function Base() {
 	const history = useHistory()
 	const location = useLocation()
 
-	useEffect(() => {
-		dispatch(fetchUserInfo())
-	}, [])
-
 	const logout = () => {
 		dispatch(setToken(''))
 		dispatch(setUserInfo({}))
@@ -54,6 +50,10 @@ function Base() {
 	const handleClick = (e: any) => {
 		history.push(e.key)
 	}
+
+	useEffect(() => {
+		dispatch(fetchUserInfo())
+	}, [])
 
     return (
         <div>

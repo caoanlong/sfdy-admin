@@ -9,16 +9,18 @@ import {
     Select, 
     Space, 
     Popconfirm, 
+    Modal,
     message 
 } from "antd"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import dayjs from 'dayjs'
-import VodApi, { VodFindListParams } from "../../api/VodApi"
-import { Vod, VodType } from "../../types"
+import VodApi, { VodFindListParams } from "../../../api/VodApi"
+import { Vod, VodType } from "../../../types"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchTypes } from "../../store/actions"
-import { AppState } from "../../store"
-import { decodeUnicode } from "../../utils/tools"
+import { fetchTypes } from "../../../store/actions"
+import { AppState } from "../../../store"
+import { decodeUnicode } from "../../../utils/tools"
+import VideoEdit from './VideoEdit'
 
 const params: VodFindListParams = {
     pageIndex: 1,
@@ -38,6 +40,8 @@ function VideoList() {
     const [ total, setTotal ] = useState(0)
     const [ currentType, setCurrentType ] = useState<VodType>()
     const [ form ] = Form.useForm()
+    const [ isEditModalVisible, setIsEditModalVisible ] = useState<boolean>(false)
+    const [ currentVideoId, setCurrentVideoId ] = useState<number>()
     
     const getList = () => {
         setLoading(true)
@@ -76,6 +80,14 @@ function VideoList() {
             message.success('成功删除:' + item.vodName)
             getList()
         })
+    }
+    const handleEdit = (videoId?: number) => {
+        setCurrentVideoId(videoId)
+        setIsEditModalVisible(true)
+    }
+    const handleEditOk = () => {
+        setIsEditModalVisible(false)
+        getList()
     }
 
     useEffect(() => {
@@ -134,7 +146,12 @@ function VideoList() {
             width: 140,
             render: (text: any, record: Vod) => (
               <Space size="middle">
-                <Tag color="#2db7f5" className="cursor-pointer">编辑</Tag>
+                <Tag 
+                    color="#2db7f5" 
+                    className="cursor-pointer" 
+                    onClick={() => handleEdit(record?.vodId)}>
+                    编辑
+                </Tag>
                 <Popconfirm
                     title="确定要删除吗？"
                     onConfirm={() => del(record)}
@@ -233,6 +250,21 @@ function VideoList() {
                 }}
                 bordered>
             </Table>
+            {
+                isEditModalVisible
+                    ? <Modal 
+                        title="修改视频" 
+                        closable={false}
+                        width={900}
+                        visible={isEditModalVisible} 
+                        footer={null}>
+                        <VideoEdit 
+                            vodId={currentVideoId}
+                            handleOk={handleEditOk} 
+                            handleCancel={() => setIsEditModalVisible(false)} />
+                    </Modal>
+                    : <></>
+            }
         </>
     )
 }

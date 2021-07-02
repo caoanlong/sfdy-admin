@@ -60,7 +60,7 @@ export type Vod = {
     loading?: boolean
 }
 
-type TypeExtend = {
+export type TypeExtend = {
     class: string,
     area: string,
     lang: string,

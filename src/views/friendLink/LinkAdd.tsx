@@ -96,7 +96,7 @@ function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
                     <input className="w-full h-full block opacity-0 absolute z-20" type="file" onChange={handleImgChange}/>
                     {
                         imageUrl
-                        ? <img className="w-full h-full block absolute z-10" src={imageUrl} />
+                        ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} />
                         : <></>
                     }
                     <PlusOutlined />
