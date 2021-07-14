@@ -66,8 +66,8 @@ function VideoList() {
     const onTypeChange = (value: number) => {
         const type = types.find(item => item.typeId === value)
         if (type) {
-            const typeExtendJson = JSON.parse(decodeUnicode((type.typeExtend as string)))
-            const classes = '全部' + ',' + typeExtendJson?.class
+            const typeExtendJson = JSON.parse(decodeUnicode((type.typeExtend)))
+            const classes = '全部,' + typeExtendJson?.class
             const classList = classes?.split(',')
             type.classList = classList
         }

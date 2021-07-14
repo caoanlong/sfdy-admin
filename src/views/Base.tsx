@@ -11,7 +11,8 @@ import {
 	CodeFilled,
 	GoogleSquareFilled,
 	ApiFilled,
-	AppstoreFilled
+	AppstoreFilled,
+	SmileFilled
   } from '@ant-design/icons'
 import Index from './Index'
 import React, { useEffect, useState } from 'react'
@@ -29,6 +30,8 @@ import FriendLinkList from './friendLink/FriendLinkList'
 import ScriptCode from './ScriptCode'
 import SysUser from './system/SysUser'
 import SysRole from './system/SysRole'
+import MemberList from './member/MemberList'
+import VipList from './member/VipList'
 
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
@@ -72,6 +75,13 @@ function Base() {
 							icon={<HomeFilled />}>
 							首页
 						</Menu.Item>
+						<SubMenu 
+							key="/member" 
+							icon={<SmileFilled />} 
+							title="会员">
+							<Menu.Item key="/member/list">用户列表</Menu.Item>
+							<Menu.Item key="/member/vip">用户VIP</Menu.Item>
+						</SubMenu>
 						<SubMenu 
 							key="/video" 
 							icon={<PlaySquareFilled />} 
@@ -148,6 +158,12 @@ function Base() {
 					</Header>
 					<Content>
 						<Switch>
+							<Route path="/member/list">
+								<MemberList/>
+							</Route>
+							<Route path="/member/vip">
+								<VipList/>
+							</Route>
 							<Route path="/video/list">
 								<VideoList/>
 							</Route>

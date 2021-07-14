@@ -117,3 +117,35 @@ export type Seo = {
     seoTime?: Date,
     seoScript?: string,
 }
+
+export type Vip = {
+    vipId?: number,
+    vipName: string,
+    level: number,
+    vipIcon?: string,
+    vipIconFile?: File,
+    validDays: number,
+    createTime?: Date,
+    updateTime?: Date
+}
+
+export type Member = {
+    memberId: number,
+    memberName: string,
+    mobile: string,
+    email: string,
+    avatar: string,
+    isAgent: number, // 0: 普通玩家， 1：代理
+    regType: number, // 1: mobile, 2: email
+    referrerId: number, // 推荐人ID
+    status: number, // 0: 禁用， 1： 正常
+    randomCode: string, // 推广链接随机码
+    totalRecharge: number,  // 充值总额，默认为0未充值
+    loginIp: number,
+    loginNum: number,
+    lastLoginIp: number,
+    loginTime: Date,
+    lastLoginTime: Date,
+    createTime: Date,
+    updateTime: Date
+}

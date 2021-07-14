@@ -27,7 +27,7 @@ type VideoEditProps = {
 function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
     const [ form ] = Form.useForm()
     const [ imageUrl, setImageUrl ] = useState<string>('')
-    const [ vodFile, setVodFile ] = useState<File>()
+    // const [ vodFile, setVodFile ] = useState<File>()
     const [ types, setTypes ] = useState<VodType[]>()
     const [ vod, setVod ] = useState<Vod>()
     const [ typeExtend, setTypeExtend ] = useState<TypeExtend>()
@@ -68,7 +68,7 @@ function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
                 return
             }
             setImageUrl(window.URL.createObjectURL(file))
-            setVodFile(file)
+            // setVodFile(file)
             form.setFieldsValue({vodPic: file})
         }
     }
@@ -200,7 +200,7 @@ function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
                         <input className="w-full h-full block opacity-0 absolute z-20" type="file" onChange={handleImgChange}/>
                         {
                             imageUrl
-                            ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} />
+                            ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} alt="img"/>
                             : <></>
                         }
                         <PlusOutlined />

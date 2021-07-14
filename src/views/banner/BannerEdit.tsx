@@ -86,7 +86,6 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     }
 
     useEffect(() => {
-        setImageUrl('')
         const list = Object.keys(BANNER_TYPES).map((key: string) => ({ key, value: BANNER_TYPES[key]}))
         setTypes(list)
         getInfo()
@@ -135,7 +134,7 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
                     <input className="w-full h-full block opacity-0 absolute z-20" type="file" onChange={handleImgChange}/>
                     {
                         imageUrl
-                        ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} />
+                        ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} alt="img"/>
                         : <></>
                     }
                     <PlusOutlined />
