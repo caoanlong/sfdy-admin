@@ -19,7 +19,7 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
 
 service.interceptors.response.use((res: AxiosResponse) => {
     if (res.data.code !== 200) {
-        if ([1001].includes(res.data.code)) {
+        if ([403, 1001].includes(res.data.code)) {
             message.error(res.data.message)
             store.dispatch(setToken(''))
             store.dispatch(setUserInfo({}))

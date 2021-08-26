@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+
 export function ip2long(ip: string){
     let ipl = 0
     ip.split('.').forEach((octet) => {
