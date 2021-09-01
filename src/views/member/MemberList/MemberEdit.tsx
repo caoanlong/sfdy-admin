@@ -5,39 +5,42 @@ import {
     message, 
     Row,
     Col,
-    InputNumber
+    Switch
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { formDataReq } from "../../../utils/tools"
-import VipApi from "../../../api/VipApi"
-import { Vip } from "../../../types"
+import { Member } from "../../../types"
 import { SITE_NAME } from "../../../utils/consts"
+import MemberApi from "../../../api/MemberApi"
 
 type MemberEditProps = {
-    vipId?: number,
+    memberId?: number,
     handleOk: Function, 
     handleCancel: Function
 }
 
-function MemberEdit({ vipId, handleOk, handleCancel }: MemberEditProps) {
+function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
     const [ form ] = Form.useForm()
     const [ imageUrl, setImageUrl ] = useState<string>('')
-    const [ vipIconFile, setVipIconFile ] = useState<File>()
+    const [ avatarFile, setAvatarFile ] = useState<File>()
+    const [ member, setMember ] = useState<Member>()
 
     const onCancel = () => {
         handleCancel()
     }
     const onFinish = (values: any) => {
-        const data: Vip = {
-            vipId,
-            vipName: values.vipName,
-            level: values.level,
-            validDays: values.validDays,
-            vipIconFile
+        const data: Member = {
+            memberId,
+            memberName: values.memberName,
+            mobile: values.mobile,
+            email: values.email,
+            password: values.password,
+            status: values.status ? 1 : 0,
+            avatarFile
         }
         const formData = formDataReq(data)
-        VipApi.update(formData).then(res => {
+        MemberApi.update(formData).then(res => {
             message.success('修改成功！')
             handleOk()
         })
@@ -57,21 +60,24 @@ function MemberEdit({ vipId, handleOk, handleCancel }: MemberEditProps) {
                 return
             }
             setImageUrl(window.URL.createObjectURL(file))
-            setVipIconFile(file)
-            form.setFieldsValue({vipIcon: file})
+            setAvatarFile(file)
+            form.setFieldsValue({avatar: file})
         }
     }
 
     const getInfo = () => {
-        VipApi.findById({ vipId }).then(res => {
-            const vip: Vip = res.data.data
-            form.setFieldsValue({ vipName: vip.vipName })
-            form.setFieldsValue({ level: vip.level })
-            form.setFieldsValue({ validDays: vip.validDays })
-            if (vip.vipIcon) {
-                setImageUrl(SITE_NAME + vip.vipIcon)
-                form.setFieldsValue({ vipIcon: vip.vipIcon })
+        MemberApi.findById({ memberId }).then(res => {
+            const mem: Member = res.data.data
+            form.setFieldsValue({ memberName: mem.memberName })
+            form.setFieldsValue({ mobile: mem.mobile })
+            form.setFieldsValue({ email: mem.email })
+            form.setFieldsValue({ status: mem.status ? true : false })
+            form.setFieldsValue({ isAgent: mem.isAgent })
+            if (mem.avatar) {
+                setImageUrl(SITE_NAME + mem.avatar)
+                form.setFieldsValue({ avatar: mem.avatar })
             }
+            setMember(mem)
         })
     }
 
@@ -81,19 +87,13 @@ function MemberEdit({ vipId, handleOk, handleCancel }: MemberEditProps) {
 
     return (
         <Form
-            name="vipAdd"
+            name="memberEdit"
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
             <Form.Item 
-                name="vipName" 
-                label="名称" 
-                rules={[{ required: true, message: '名称不能为空!' }]}>
-                <Input placeholder="请输入..."/>
-            </Form.Item>
-            <Form.Item 
-                name="vipIcon" 
-                label="图标">
+                name="avatar" 
+                label="头像">
                 <div 
                     className="w-36 h-36 bg-gray-100 border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400" 
                     style={{borderWidth: '1px'}}>
@@ -106,11 +106,52 @@ function MemberEdit({ vipId, handleOk, handleCancel }: MemberEditProps) {
                     <PlusOutlined />
                 </div>
             </Form.Item>
-            <Form.Item name="level" label="等级" rules={[{ required: true, message: '等级不能为空!' }]}>
-                <InputNumber min={1} max={100} />
+            <Form.Item 
+                name="isAgent" 
+                label="代理">
+                <span>{member?.isAgent === 0 ? '否' : '是'}</span>
             </Form.Item>
-            <Form.Item name="validDays" label="有效天数" rules={[{ required: true, message: '有效天数不能为空!' }]}>
-                <InputNumber min={1} max={99999} />
+            <Form.Item 
+                name="randomCode" 
+                label="推广链接">
+                <a 
+                    target="_blank"
+                    href={'https://jyavs.com/register/' + member?.randomCode}
+                    className="text-blue-500">
+                    {'https://jyavs.com/register/' + member?.randomCode}
+                </a>
+            </Form.Item>
+            <Form.Item 
+                name="memberName" 
+                label="名称" 
+                rules={[{ pattern: /^[a-zA-Z]\w{4,14}$/,  message: '名称格式错误!' }]}>
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="mobile" 
+                label="手机号" 
+                rules={[{ pattern: /^[1][3-9][0-9]{9}$/, message: '手机格式错误!' }]}>
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="email" 
+                label="邮箱" 
+                rules={[{ pattern: /^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/, message: '邮箱格式错误!' }]}>
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="password" 
+                label="密码">
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="status" 
+                label="状态" 
+                valuePropName="checked">
+                <Switch 
+                    checkedChildren="正常" 
+                    unCheckedChildren="禁用"  
+                />
             </Form.Item>
             <Row>
                 <Col span={24} className="text-right">

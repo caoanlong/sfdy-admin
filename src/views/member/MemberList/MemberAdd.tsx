@@ -4,41 +4,41 @@ import {
     Input,
     message, 
     Row,
-    Col,
-    InputNumber
+    Col
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import React, { ChangeEvent, useEffect, useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import { formDataReq } from "../../../utils/tools"
-import VipApi from "../../../api/VipApi"
-import { Vip } from "../../../types"
-import { SITE_NAME } from "../../../utils/consts"
+import { Member } from "../../../types"
+import MemberApi from "../../../api/MemberApi"
 
-type VipEditProps = {
-    vipId?: number,
+type MemberEditProps = {
     handleOk: Function, 
     handleCancel: Function
 }
 
-function VipEdit({ vipId, handleOk, handleCancel }: VipEditProps) {
+function MemberEdit({ handleOk, handleCancel }: MemberEditProps) {
     const [ form ] = Form.useForm()
     const [ imageUrl, setImageUrl ] = useState<string>('')
-    const [ vipIconFile, setVipIconFile ] = useState<File>()
+    const [ avatarFile, setAvatarFile ] = useState<File>()
 
     const onCancel = () => {
         handleCancel()
     }
     const onFinish = (values: any) => {
-        const data: Vip = {
-            vipId,
-            vipName: values.vipName,
-            level: values.level,
-            validDays: values.validDays,
-            vipIconFile
+        console.log(values)
+        const data: Member = {
+            memberName: values.memberName,
+            mobile: values.mobile,
+            email: values.email,
+            password: values.password,
+            isAgent: 1,
+            status: 1,
+            avatarFile
         }
         const formData = formDataReq(data)
-        VipApi.update(formData).then(res => {
-            message.success('修改成功！')
+        MemberApi.add(formData).then(res => {
+            message.success('添加成功！')
             handleOk()
         })
     }
@@ -57,43 +57,20 @@ function VipEdit({ vipId, handleOk, handleCancel }: VipEditProps) {
                 return
             }
             setImageUrl(window.URL.createObjectURL(file))
-            setVipIconFile(file)
-            form.setFieldsValue({vipIcon: file})
+            setAvatarFile(file)
+            form.setFieldsValue({avatar: file})
         }
     }
 
-    const getInfo = () => {
-        VipApi.findById({ vipId }).then(res => {
-            const vip: Vip = res.data.data
-            form.setFieldsValue({ vipName: vip.vipName })
-            form.setFieldsValue({ level: vip.level })
-            form.setFieldsValue({ validDays: vip.validDays })
-            if (vip.vipIcon) {
-                setImageUrl(SITE_NAME + vip.vipIcon)
-                form.setFieldsValue({ vipIcon: vip.vipIcon })
-            }
-        })
-    }
-
-    useEffect(() => {
-        getInfo()
-    }, [])
-
     return (
         <Form
-            name="vipEdit"
+            name="memberEdit"
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
             <Form.Item 
-                name="vipName" 
-                label="名称" 
-                rules={[{ required: true, message: '名称不能为空!' }]}>
-                <Input placeholder="请输入..."/>
-            </Form.Item>
-            <Form.Item 
-                name="vipIcon" 
-                label="图标">
+                name="avatar" 
+                label="头像">
                 <div 
                     className="w-36 h-36 bg-gray-100 border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400" 
                     style={{borderWidth: '1px'}}>
@@ -106,11 +83,34 @@ function VipEdit({ vipId, handleOk, handleCancel }: VipEditProps) {
                     <PlusOutlined />
                 </div>
             </Form.Item>
-            <Form.Item name="level" label="等级" rules={[{ required: true, message: '等级不能为空!' }]}>
-                <InputNumber min={1} max={100} />
+            <Form.Item 
+                name="isAgent" 
+                label="代理">
+                <span>是</span>
             </Form.Item>
-            <Form.Item name="validDays" label="有效天数" rules={[{ required: true, message: '有效天数不能为空!' }]}>
-                <InputNumber min={1} max={99999} />
+            <Form.Item 
+                name="memberName" 
+                label="名称" 
+                rules={[{ pattern: /^[a-zA-Z]\w{4,14}$/,  message: '名称格式错误!' }]}>
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="mobile" 
+                label="手机号" 
+                rules={[{ pattern: /^[1][3-9][0-9]{9}$/, message: '手机格式错误!' }]}>
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="email" 
+                label="邮箱" 
+                rules={[{ pattern: /^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/, message: '邮箱格式错误!' }]}>
+                <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="password" 
+                label="密码" 
+                rules={[{ required: true, message: '密码不能为空!' }]}>
+                <Input placeholder="请输入..."/>
             </Form.Item>
             <Row>
                 <Col span={24} className="text-right">
@@ -122,4 +122,4 @@ function VipEdit({ vipId, handleOk, handleCancel }: VipEditProps) {
     )
 }
 
-export default VipEdit
+export default MemberEdit
