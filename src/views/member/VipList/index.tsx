@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react"
-import { Button, Col, Form, Input, message, Modal, Popconfirm, Row, Space, Table, Tag } from "antd"
+import { Button, Col, Form, message, Modal, Popconfirm, Row, Space, Table, Tag } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import { Vip } from "../../../types"
 import VipApi, { VipFindListParams } from "../../../api/VipApi"
 import dayjs from "dayjs"
 import VipAdd from "./VipAdd"
-import { SITE_NAME } from "../../../utils/consts"
 import VipEdit from "./VipEdit"
 
 
 const params: VipFindListParams = {
     pageIndex: 1,
-    pageSize: 10,
-    vipName: undefined
+    pageSize: 10
 }
 
 function VipList() {
@@ -37,8 +35,7 @@ function VipList() {
         })
     }
 
-    const onFinish = ({ vipName }: any) => {
-        params.vipName = vipName || undefined
+    const onFinish = () => {
         getList()
     }
 
@@ -48,7 +45,7 @@ function VipList() {
             return
         }
         VipApi.del({ vipId: item.vipId }).then(res => {
-            message.success('成功删除:' + item.vipName)
+            message.success('成功删除')
             getList()
         })
     }
@@ -76,29 +73,26 @@ function VipList() {
             key: 'vipId',
             width: 70
         },{
-            title: '图标',
-            dataIndex: 'vipIcon',
-            key: 'vipIcon',
-            width: 100,
-            render: (icon: string) => {
-                return (icon ? <img className="w-5 h-5" src={SITE_NAME + icon} alt="icon"/> : <></>)
-            }
-        },{
-            title: '等级',
-            dataIndex: 'level',
-            key: 'level',
-            width: 80
-        },{
-            title: '名称',
-            dataIndex: 'vipName',
-            key: 'vipName',
-            ellipsis: true
-        },{
             title: '有效时间',
             dataIndex: 'validDays',
             key: 'validDays',
             render: (validDays: number) => {
                 return (validDays + '天')
+            }
+        },{
+            title: '价格',
+            dataIndex: 'price',
+            key: 'price',
+            render: (price: number) => {
+                return (price + '元')
+            }
+        },{
+            title: '创建时间',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            width: 180,
+            render: (time: Date) => {
+                return (<span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>)
             }
         },{
             title: '修改时间',
@@ -120,16 +114,6 @@ function VipList() {
                     onClick={() => handleEdit(record?.vipId)}>
                     编辑
                 </Tag>
-                <Popconfirm
-                    title="确定要删除吗？"
-                    onConfirm={() => del(record)}
-                    onCancel={() => {
-                        message.info('已取消')
-                    }}
-                    okText="确定"
-                    cancelText="取消">
-                    <Tag color="#f50" className="cursor-pointer">删除</Tag>
-                </Popconfirm>
               </Space>
             )
         }
@@ -143,13 +127,6 @@ function VipList() {
                 className="bg-white m-4 p-3 shadow"
                 form={form}
                 onFinish={onFinish}>
-                <Row gutter={24}>
-                    <Col span={6} key="vipName">
-                        <Form.Item name="vipName" label="名称">
-                            <Input placeholder="请输入..."/>
-                        </Form.Item>
-                    </Col>
-                </Row>
                 <Row>
                     <Col span={12}>
                         <Button 

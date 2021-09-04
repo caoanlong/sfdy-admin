@@ -1,4 +1,5 @@
 
+import { Vip } from '../types'
 import request from '../utils/request'
 
 
@@ -23,20 +24,23 @@ class VipApi {
             params
         })
     }
-    static add(data: FormData) {
+    static findAll() {
+        return request({
+            url: this.url + '/findAll'
+        })
+    }
+    static add(data: Vip) {
         return request({
             url: this.url + '/add',
             method: 'post',
-            data,
-            headers: { 'Content-type': 'multipart/form-data;charset=UTF-8' }
+            data
         })
     }
-    static update(data: FormData) {
+    static update(data: Vip) {
         return request({
             url: this.url + '/update',
             method: 'post',
-            data,
-            headers: { 'Content-type': 'multipart/form-data;charset=UTF-8' },
+            data
         })
     }
     static del(data: { vipId?: number }) {

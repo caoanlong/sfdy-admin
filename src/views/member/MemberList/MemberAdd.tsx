@@ -12,12 +12,12 @@ import { formDataReq } from "../../../utils/tools"
 import { Member } from "../../../types"
 import MemberApi from "../../../api/MemberApi"
 
-type MemberEditProps = {
+type MemberAddProps = {
     handleOk: Function, 
     handleCancel: Function
 }
 
-function MemberEdit({ handleOk, handleCancel }: MemberEditProps) {
+function MemberAdd({ handleOk, handleCancel }: MemberAddProps) {
     const [ form ] = Form.useForm()
     const [ imageUrl, setImageUrl ] = useState<string>('')
     const [ avatarFile, setAvatarFile ] = useState<File>()
@@ -26,7 +26,6 @@ function MemberEdit({ handleOk, handleCancel }: MemberEditProps) {
         handleCancel()
     }
     const onFinish = (values: any) => {
-        console.log(values)
         const data: Member = {
             memberName: values.memberName,
             mobile: values.mobile,
@@ -122,4 +121,4 @@ function MemberEdit({ handleOk, handleCancel }: MemberEditProps) {
     )
 }
 
-export default MemberEdit
+export default MemberAdd

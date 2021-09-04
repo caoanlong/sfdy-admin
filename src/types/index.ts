@@ -120,13 +120,12 @@ export type Seo = {
 
 export type Vip = {
     vipId?: number,
-    vipName: string,
-    level: number,
-    vipIcon?: string,
-    vipIconFile?: File,
+    id?: number,  // MemberVipID
     validDays: number,
+    price: number,
     createTime?: Date,
-    updateTime?: Date
+    updateTime?: Date,
+    startTime?: Date
 }
 
 export type Member = {
@@ -149,5 +148,7 @@ export type Member = {
     lastLoginTime?: Date,
     createTime?: Date,
     updateTime?: Date,
-    avatarFile?: File
+    avatarFile?: File,
+    vipIds?: number[],
+    vips?: Vip[]
 }

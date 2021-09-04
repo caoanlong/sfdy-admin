@@ -16,9 +16,11 @@ import { PlusOutlined } from '@ant-design/icons'
 import dayjs from "dayjs"
 import React, { useEffect, useState } from "react"
 import MemberApi, { MemberFindListParams } from "../../../api/MemberApi"
-import { Member } from "../../../types"
+import { Member, Vip } from "../../../types"
 import MemberEdit from "./MemberEdit"
 import MemberAdd from "./MemberAdd"
+import VipApi from "../../../api/VipApi"
+import MemberEditVIP from "./MemberEditVIP"
 
 const params: MemberFindListParams = {
     pageIndex: 1,
@@ -38,7 +40,9 @@ function MemberList() {
     const [ form ] = Form.useForm()
     const [ isAddModalVisible, setIsAddModalVisible ] = useState(false)
     const [ isEditModalVisible, setIsEditModalVisible ] = useState(false)
+    const [ isEditVIPModalVisible, setIsEditVIPModalVisible ] = useState(false)
     const [ currentMemberId, setCurrentMemberId ] = useState<number>()
+    const [ vips, setVips ] = useState<Vip[]>([])
 
     const getList = () => {
         setLoading(true)
@@ -50,6 +54,11 @@ function MemberList() {
             }))
             setList(rows)
             setLoading(false)
+        })
+    }
+    const getVips = () => {
+        VipApi.findAll().then(res => {
+            setVips(res.data.data)
         })
     }
 
@@ -86,6 +95,10 @@ function MemberList() {
         setCurrentMemberId(memberId)
         setIsEditModalVisible(true)
     }
+    const handleEditVIP = (memberId?: number) => {
+        setCurrentMemberId(memberId)
+        setIsEditVIPModalVisible(true)
+    }
     const handleAddOk = () => {
         setIsAddModalVisible(false)
         getList()
@@ -97,6 +110,7 @@ function MemberList() {
 
     useEffect(() => {
         getList()
+        getVips()
     }, [])
     
     const columns = [
@@ -178,7 +192,7 @@ function MemberList() {
         },{
             title: '操作',
             key: 'action',
-            width: 140,
+            width: 200,
             render: (text: any, record: Member) => (
               <Space size="middle">
                 <Tag 
@@ -186,6 +200,12 @@ function MemberList() {
                     className="cursor-pointer" 
                     onClick={() => handleEdit(record?.memberId)}>
                     编辑
+                </Tag>
+                <Tag 
+                    color="#2db7f5" 
+                    className="cursor-pointer" 
+                    onClick={() => handleEditVIP(record?.memberId)}>
+                    VIP
                 </Tag>
                 <Popconfirm
                     title="确定要删除吗？"
@@ -338,6 +358,21 @@ function MemberList() {
                             memberId={currentMemberId}
                             handleOk={handleEditOk} 
                             handleCancel={() => setIsEditModalVisible(false)} />
+                    </Modal>
+                    : <></>
+            }
+            {
+                isEditVIPModalVisible
+                    ? <Modal 
+                        title="修改VIP" 
+                        closable={false}
+                        width={1000}
+                        visible={isEditVIPModalVisible} 
+                        footer={null}>
+                        <MemberEditVIP 
+                            memberId={currentMemberId}
+                            vips={vips}
+                            handleCancel={() => setIsEditVIPModalVisible(false)} />
                     </Modal>
                     : <></>
             }

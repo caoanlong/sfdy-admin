@@ -28,6 +28,32 @@ class MemberApi {
             params
         })
     }
+    static getValidVips(params: { memberId?: number }) {
+        return request({
+            url: this.url + '/validVips',
+            params
+        })
+    }
+    static getVips(params: { memberId?: number }) {
+        return request({
+            url: this.url + '/vips',
+            params
+        })
+    }
+    static deleteMemberVip(data: { id?: number }) {
+        return request({
+            url: this.url + '/deleteMemberVip',
+            method: 'post',
+            data
+        })
+    }
+    static addMemberVip(data: { memberId: number, vipId: number }) {
+        return request({
+            url: this.url + '/addMemberVip',
+            method: 'post',
+            data
+        })
+    }
     static add(data: FormData) {
         return request({
             url: this.url + '/add',

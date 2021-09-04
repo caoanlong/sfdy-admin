@@ -5,12 +5,13 @@ import {
     message, 
     Row,
     Col,
-    Switch
+    Switch,
+    Tag
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { formDataReq } from "../../../utils/tools"
-import { Member } from "../../../types"
+import { Member, Vip } from "../../../types"
 import { SITE_NAME } from "../../../utils/consts"
 import MemberApi from "../../../api/MemberApi"
 
@@ -25,11 +26,13 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
     const [ imageUrl, setImageUrl ] = useState<string>('')
     const [ avatarFile, setAvatarFile ] = useState<File>()
     const [ member, setMember ] = useState<Member>()
+    const [ selectedVips, setSelectedVips ] = useState<Vip[]>([])
 
     const onCancel = () => {
         handleCancel()
     }
     const onFinish = (values: any) => {
+        const vipIds = selectedVips.map((item: Vip) => item.vipId)
         const data: Member = {
             memberId,
             memberName: values.memberName,
@@ -38,6 +41,9 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
             password: values.password,
             status: values.status ? 1 : 0,
             avatarFile
+        }
+        if (vipIds && vipIds.length > 0) {
+            data.vipIds = vipIds as number[]
         }
         const formData = formDataReq(data)
         MemberApi.update(formData).then(res => {
@@ -78,6 +84,7 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
                 form.setFieldsValue({ avatar: mem.avatar })
             }
             setMember(mem)
+            setSelectedVips(mem.vips as Vip[])
         })
     }
 
@@ -106,11 +113,29 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
                     <PlusOutlined />
                 </div>
             </Form.Item>
-            <Form.Item 
-                name="isAgent" 
-                label="代理">
-                <span>{member?.isAgent === 0 ? '否' : '是'}</span>
-            </Form.Item>
+            <Row>
+                <Col span={12}>
+                    <Form.Item 
+                        name="isAgent" 
+                        label="代理" 
+                        labelCol={{span: 8}}>
+                        <span>{member?.isAgent === 0 ? '否' : '是'}</span>
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item 
+                        name="status" 
+                        label="状态" 
+                        labelCol={{span: 8}}
+                        valuePropName="checked">
+                        <Switch 
+                            checkedChildren="正常" 
+                            unCheckedChildren="禁用"  
+                        />
+                    </Form.Item>
+                </Col>
+            </Row>
+            
             <Form.Item 
                 name="randomCode" 
                 label="推广链接">
@@ -144,15 +169,22 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
                 label="密码">
                 <Input placeholder="请输入..."/>
             </Form.Item>
-            <Form.Item 
-                name="status" 
-                label="状态" 
-                valuePropName="checked">
-                <Switch 
-                    checkedChildren="正常" 
-                    unCheckedChildren="禁用"  
-                />
-            </Form.Item>
+            <Row className="pb-2">
+                <Col span={4} className="text-right">
+                    VIP时长：
+                </Col>
+                <Col span={20}>
+                    {
+                        selectedVips.map((vip: Vip, i: number) => {
+                            return <Tag 
+                                className="mb-2"
+                                key={i + '' + (vip.vipId || 0)}>
+                                {vip.validDays}天
+                            </Tag>
+                        })
+                    }
+                </Col>
+            </Row>
             <Row>
                 <Col span={24} className="text-right">
                     <Button className="mr-3" onClick={onCancel}>取消</Button>
