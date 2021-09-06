@@ -152,3 +152,24 @@ export type Member = {
     vipIds?: number[],
     vips?: Vip[]
 }
+
+export type Order = {
+    orderId: number,
+    platform: number,   // 1: jyav 2: fenglou
+    memberId: number,
+    title: string,
+    vipId: number,
+    orderNo: string,
+    amount: number, // 金额
+    type: number, // 1: 充值， 2：提现， 3：佣金
+    category: number, // 1: VIP 2: 其他产品...
+    status: number, // 1: 确认中 2: 成功  3: 失败
+    description: number,
+    extraInfo: number,
+    createTime: Date,
+    updateTime: Date,
+    payIp: string,
+    memberName: string,
+    memberEmail: string,
+    memberMobile: string
+}

@@ -32,6 +32,7 @@ import SysUser from './system/SysUser'
 import SysRole from './system/SysRole'
 import MemberList from './member/MemberList'
 import VipList from './member/VipList'
+import OrderList from './member/OrderList'
 
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
@@ -78,8 +79,9 @@ function Base() {
 						<SubMenu 
 							key="/member" 
 							icon={<SmileFilled />} 
-							title="会员">
+							title="用户">
 							<Menu.Item key="/member/list">用户列表</Menu.Item>
+							<Menu.Item key="/member/order">用户订单</Menu.Item>
 							<Menu.Item key="/member/vip">用户VIP</Menu.Item>
 						</SubMenu>
 						<SubMenu 
@@ -160,6 +162,9 @@ function Base() {
 						<Switch>
 							<Route path="/member/list">
 								<MemberList/>
+							</Route>
+							<Route path="/member/order">
+								<OrderList/>
 							</Route>
 							<Route path="/member/vip">
 								<VipList/>
