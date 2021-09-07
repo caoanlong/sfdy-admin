@@ -65,7 +65,7 @@ function VideoList() {
 
     const onTypeChange = (value: number) => {
         const type = types.find(item => item.typeId === value)
-        if (type) {
+        if (type && type.typeExtend) {
             const typeExtendJson = JSON.parse(decodeUnicode((type.typeExtend)))
             const classes = '全部,' + typeExtendJson?.class
             const classList = classes?.split(',')
@@ -100,7 +100,7 @@ function VideoList() {
             title: '编号',
             dataIndex: 'vodId',
             key: 'vodId',
-            width: 90
+            width: 80
         },{
             title: '名称',
             dataIndex: 'vodName',
@@ -131,7 +131,7 @@ function VideoList() {
             title: '播放器',
             dataIndex: 'vodPlayFrom',
             key: 'vodPlayFrom',
-            width: 90
+            width: 160
         },{
             title: '更新时间',
             dataIndex: 'vodTime',
@@ -205,7 +205,7 @@ function VideoList() {
                                 placeholder="请选择"
                                 allowClear>
                                 {
-                                    currentType?.classList.map((item: string) => (
+                                    currentType?.classList?.map((item: string) => (
                                         <Select.Option 
                                             key={item} 
                                             value={item}>

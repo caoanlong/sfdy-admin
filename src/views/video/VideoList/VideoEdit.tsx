@@ -10,13 +10,12 @@ import {
     Tag
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { decodeUnicode, formDataReq } from "../../../utils/tools"
 import { SITE_NAME } from "../../../utils/consts"
 import { Res, TypeExtend, Vod, VodType } from "../../../types"
 import VodApi from "../../../api/VodApi"
 import VodTypeApi from "../../../api/VodTypeApi"
-import Hls from 'hls.js'
 
 type VideoEditProps = {
     vodId?: number,
@@ -27,12 +26,9 @@ type VideoEditProps = {
 function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
     const [ form ] = Form.useForm()
     const [ imageUrl, setImageUrl ] = useState<string>('')
-    // const [ vodFile, setVodFile ] = useState<File>()
     const [ types, setTypes ] = useState<VodType[]>()
     const [ vod, setVod ] = useState<Vod>()
     const [ typeExtend, setTypeExtend ] = useState<TypeExtend>()
-    const videoRef = useRef() as RefObject<HTMLVideoElement>
-    let hls: Hls
 
     const onCancel = () => {
         handleCancel()
@@ -45,7 +41,8 @@ function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
             vodName: values.vodName,
             vodEn: values.vodEn,
             vodScore: values.vodScore,
-            vodPlayUrl: values.vodPlayUrl
+            vodPlayUrl: values.vodPlayUrl,
+            permission: values.permission
         }
         const formData = formDataReq(data)
         VodApi.update(formData).then(res => {
@@ -86,25 +83,13 @@ function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
             form.setFieldsValue({vodClass: res2.data?.vodClass})
             form.setFieldsValue({vodScore: res2.data?.vodScore})
             form.setFieldsValue({vodPlayUrl: res2.data?.vodPlayUrl})
+            form.setFieldsValue({permission: res2.data?.permission})
             if (res2.data?.vodPic?.startsWith('http')) {
                 form.setFieldsValue({vodPic: res2.data?.vodPic})
                 setImageUrl(res2.data?.vodPic)
             } else {
                 form.setFieldsValue({vodPic: SITE_NAME + '/' + res2.data?.vodPic})
                 setImageUrl(SITE_NAME + '/' + res2.data?.vodPic)
-            }
-            const videoEle = videoRef.current as HTMLVideoElement
-            const URL = "http" + res2.data?.vodPlayUrl?.split("http")[1]
-            if (Hls.isSupported()) {
-                hls = new Hls()
-                hls.loadSource(URL)
-                hls.attachMedia(videoEle)
-            } else if (videoEle?.canPlayType("application/vnd.apple.mpegurl")) {
-                videoEle.setAttribute('src', URL)
-            }
-            return () => {
-                hls.detachMedia()
-                hls.destroy()
             }
         })
     }, [])
@@ -190,42 +175,40 @@ function VideoEdit({ vodId, handleOk, handleCancel}: VideoEditProps) {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item 
-                    name="vodPic" 
-                    label="图片" 
-                    rules={[{ required: true, message: '图片不能为空!' }]}>
-                    <div 
-                        className="w-52 h-36 bg-gray-100 border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400" 
-                        style={{borderWidth: '1px'}}>
-                        <input className="w-full h-full block opacity-0 absolute z-20" type="file" onChange={handleImgChange}/>
-                        {
-                            imageUrl
-                            ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} alt="img"/>
-                            : <></>
-                        }
-                        <PlusOutlined />
-                    </div>
-                </Form.Item>
+                <Row>
+                    <Col span={12}>
+                        <Form.Item 
+                            name="vodPic" 
+                            label="图片" 
+                            labelCol={{ span: 8 }}
+                            rules={[{ required: true, message: '图片不能为空!' }]}>
+                            <div 
+                                className="w-52 h-36 bg-gray-100 border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400" 
+                                style={{borderWidth: '1px'}}>
+                                <input className="w-full h-full block opacity-0 absolute z-20" type="file" onChange={handleImgChange}/>
+                                {
+                                    imageUrl
+                                    ? <img className="w-full h-full block absolute z-10 object-cover" src={imageUrl} alt="img"/>
+                                    : <></>
+                                }
+                                <PlusOutlined />
+                            </div>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item 
+                            labelCol={{ span: 8 }}
+                            name="permission" 
+                            label="权限">
+                            <InputNumber min={0} max={10} step="1"/>
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Form.Item 
                     name="vodPlayUrl" 
                     label="播放地址" 
                     rules={[{ required: true, message: '播放地址不能为空!' }]}>
                     <Input placeholder="请输入..."/>
-                </Form.Item>
-                <Form.Item 
-                    label=" ">
-                    <div className="w-80">
-                        <div className="aspectration" data-ratio="16:9">
-                            <div className="con overflow-hidden">
-                                <video 
-                                    ref={videoRef}
-                                    className="w-full h-full"
-                                    autoPlay={false}
-                                    controls>
-                                </video>
-                            </div>
-                        </div>
-                    </div>
                 </Form.Item>
                 <Row>
                     <Col span={24} className="text-right">

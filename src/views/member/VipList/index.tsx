@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Button, Col, Form, message, Modal, Popconfirm, Row, Space, Table, Tag } from "antd"
+import { Button, Col, Form, Modal, Row, Space, Table, Tag } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import { Vip } from "../../../types"
 import VipApi, { VipFindListParams } from "../../../api/VipApi"
@@ -39,16 +39,16 @@ function VipList() {
         getList()
     }
 
-    const del = (item: Vip) => {
-        if (!item.vipId) {
-            message.error('vipId不能为空！')
-            return
-        }
-        VipApi.del({ vipId: item.vipId }).then(res => {
-            message.success('成功删除')
-            getList()
-        })
-    }
+    // const del = (item: Vip) => {
+    //     if (!item.vipId) {
+    //         message.error('vipId不能为空！')
+    //         return
+    //     }
+    //     VipApi.del({ vipId: item.vipId }).then(res => {
+    //         message.success('成功删除')
+    //         getList()
+    //     })
+    // }
     const handleEdit = (vipId?: number) => {
         setCurrentVipId(vipId)
         setIsEditModalVisible(true)

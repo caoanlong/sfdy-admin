@@ -1,3 +1,4 @@
+import { VodType } from '../types'
 import request from '../utils/request'
 
 
@@ -12,6 +13,21 @@ class VodTypeApi {
     static findAll() {
         return request({
             url: this.url + '/findAll'
+        })
+    }
+
+    static findById(params: { typeId?: number }) {
+        return request({
+            url: this.url + '/findById',
+            params
+        })
+    }
+
+    static update(data: VodType) {
+        return request({
+            url: this.url + '/update',
+            method: 'post',
+            data
         })
     }
 

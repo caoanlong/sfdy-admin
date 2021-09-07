@@ -36,6 +36,14 @@ class VodApi {
         })
     }
     
+    static updatePermissionByClass(data: { typeId: number, vodClass: string, permission: number }) {
+        return request({
+            url: this.url + '/updatePermissionByClass',
+            method: 'post',
+            data
+        })
+    }
+    
     static del(data: { vodId: number }) {
         return request({
             url: this.url + '/del',

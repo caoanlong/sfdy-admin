@@ -57,6 +57,7 @@ export type Vod = {
     vodPlayUrl: string,
     vodPlot: number,
     status?: number,
+    permission?: number,
     loading?: boolean
 }
 
@@ -73,17 +74,17 @@ export type TypeExtend = {
 
 export type VodType = {
     typeId: number,
-    typeName: string,
-    typeEn: string,
-    typeSort: number,
-    typeMid: number,
-    typePid: number,
-    typeStatus: number,
-    typeKey: string,
-    typeDes: string,
-    typeExtend: string,
+    typeName?: string,
+    typeEn?: string,
+    typeSort?: number,
+    typeMid?: number,
+    typePid?: number,
+    typeStatus?: number,
+    typeKey?: string,
+    typeDes?: string,
+    typeExtend?: string,
     typeExtendJson?: TypeExtend,
-    classList: string[]
+    classList?: string[]
 }
 
 export type Banner = {
