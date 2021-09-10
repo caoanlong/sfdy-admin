@@ -59,7 +59,8 @@ function VideoScan() {
     const hanleTest = (item: Vod) => {
         item.loading = true
         setList([...list])
-        const URL = item.vodPlayUrl.replace('在线播放$', '')
+        const arr = item.vodPlayUrl.split('http')
+        const URL = "http" + arr[arr.length - 1]
         fetch(URL, { mode: 'cors' }).then(res => {
             if (res.status === 200) {
                 item.status = 1

@@ -33,6 +33,7 @@ import SysRole from './system/SysRole'
 import MemberList from './member/MemberList'
 import VipList from './member/VipList'
 import OrderList from './member/OrderList'
+import AppVersion from './AppVersion'
 
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
@@ -192,6 +193,9 @@ function Base() {
 							</Route>
 							<Route path="/scriptcode">
 								<ScriptCode/>
+							</Route>
+							<Route path="/appversion">
+								<AppVersion/>
 							</Route>
 							<Route path="/system/user">
 								<SysUser/>

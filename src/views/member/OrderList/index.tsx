@@ -9,6 +9,7 @@ const params: OrderFindListParams = {
     pageIndex: 1,
     pageSize: 10,
     orderNo: undefined,
+    platform: undefined,
     type: undefined,
     status: undefined
 }
@@ -22,6 +23,12 @@ const TYPE_MAP: {[key: number]: string} = {
     1: '充值',
     2: '提现',
     3: '佣金'
+}
+
+const PLATFORM_MAP: {[key: number]: string} = {
+    1: '巨硬AV',
+    2: '凤楼',
+    5: '快充'
 }
 
 function OrderList() {
@@ -43,11 +50,21 @@ function OrderList() {
         })
     }
 
-    const onFinish = ({ orderNo, type, status }: { orderNo: string, type: number, status: number }) => {
+    const onFinish = ({ orderNo, platform, type, status }: { 
+        orderNo: string, 
+        platform: number, 
+        type: number, 
+        status: number 
+    }) => {
         params.orderNo = orderNo || undefined
+        params.platform = platform || undefined
         params.type = type || undefined
         params.status = status || undefined
         getList()
+    }
+
+    const onPlatformChange = (value: number) => {
+        form.setFieldsValue({ platform: value })
     }
 
     const onTypeChange = (value: number) => {
@@ -71,16 +88,25 @@ function OrderList() {
             title: '订单号',
             dataIndex: 'orderNo',
             key: 'orderNo',
-            width: 150,
+            width: 220,
+        },{
+            title: '平台',
+            dataIndex: 'platform',
+            key: 'platform',
+            width: 80,
+            render: (platform: number) => {
+                return (PLATFORM_MAP[platform])
+            }
         },{
             title: '标题',
             dataIndex: 'title',
-            key: 'title'
+            key: 'title',
+            ellipsis: true
         },{
             title: '类型',
             dataIndex: 'type',
             key: 'type',
-            width: 70,
+            width: 65,
             render: (type: number) => {
                 return (TYPE_MAP[type])
             }
@@ -88,6 +114,7 @@ function OrderList() {
             title: '金额',
             dataIndex: 'amount',
             key: 'amount',
+            width: 85,
             render: (amount: number) => {
                 return (amount + '元')
             }
@@ -102,20 +129,19 @@ function OrderList() {
         },{
             title: '用户邮箱',
             dataIndex: 'memberEmail',
-            key: 'memberEmail'
+            key: 'memberEmail',
+            width: 220
         },{
             title: '用户手机',
             dataIndex: 'memberMobile',
-            key: 'memberMobile'
+            key: 'memberMobile',
+            width: 130,
         },{
             title: '支付IP',
             dataIndex: 'payIp',
             key: 'payIp',
-            width: 130,
-        },{
-            title: '额外信息',
-            dataIndex: 'extraInfo',
-            key: 'extraInfo'
+            width: 150,
+            ellipsis: true
         },{
             title: '创建时间',
             dataIndex: 'createTime',
@@ -139,6 +165,19 @@ function OrderList() {
                     <Col span={6} key="orderNo">
                         <Form.Item name="orderNo" label="订单号">
                             <Input placeholder="请输入..."/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={6} key="platform">
+                        <Form.Item name="platform" label="平台">
+                            <Select
+                                placeholder="请选择"
+                                allowClear 
+                                onChange={onPlatformChange}>
+                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option value={1}>巨硬AV</Select.Option>
+                                <Select.Option value={2}>凤楼</Select.Option>
+                                <Select.Option value={5}>快充</Select.Option>
+                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={6} key="type">
@@ -180,6 +219,7 @@ function OrderList() {
                                 params.orderNo = undefined
                                 params.status = undefined
                                 params.type = undefined
+                                params.platform = undefined
                                 getList()
                             }}>
                             重置

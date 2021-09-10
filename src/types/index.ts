@@ -174,3 +174,16 @@ export type Order = {
     memberEmail: string,
     memberMobile: string
 }
+
+export type AppVersion = {
+    id?: number,
+    appId?: string,
+    appName?: string,
+    newVersion: string,
+    minVersion: string,
+    appUrl: string,
+    description: string,
+    isUpdate: number,
+    device: number, // 1: 安卓 2: iOS
+    createTime?: Date
+}

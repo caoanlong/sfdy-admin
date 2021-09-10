@@ -1,45 +1,33 @@
-import { 
-    Table, 
-    Tag, 
-    Form, 
-    Row, 
-    Col, 
-    Button, 
-    Input, 
-    Space, 
-    Popconfirm, 
-    Modal,
-    message 
-} from "antd"
+import React, { useEffect, useState } from "react"
+import { Button, Col, Form, message, Modal, Popconfirm, Row, Select, Space, Table, Tag } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import { useEffect, useState } from "react"
-import dayjs from 'dayjs'
-import { Link } from "../../types"
-import LinkAdd from "./LinkAdd"
-import LinkEdit from "./LinkEdit"
-import LinkApi, { LinkFindListParams } from "../../api/LinkApi"
+import { AppVersion } from "../../types"
+import AppVersionApi, { AppVersionFindListParams } from "../../api/AppVersionApi"
+import AppVersionAdd from "./AppVersionAdd"
+import AppVersionEdit from "./AppVersionEdit"
 
-const params: LinkFindListParams = {
+
+const params: AppVersionFindListParams = {
     pageIndex: 1,
     pageSize: 10,
-    linkName: undefined
+    device: undefined
 }
 
-function FriendLink() {
+function AppVersionList() {
     const [ loading, setLoading ] = useState(false)
-    const [ list, setList ] = useState<Link[]>([])
+    const [ list, setList ] = useState<AppVersion[]>([])
     const [ total, setTotal ] = useState(0)
     const [ form ] = Form.useForm()
     const [ isAddModalVisible, setIsAddModalVisible ] = useState(false)
     const [ isEditModalVisible, setIsEditModalVisible ] = useState(false)
-    const [ currentLinkId, setCurrentLinkId ] = useState<number>()
+    const [ currentId, setCurrentId ] = useState<number>()
 
     const getList = () => {
         setLoading(true)
-        LinkApi.findList(params).then(res => {
+        AppVersionApi.findList(params).then(res => {
             setTotal(res.data.data.total)
-            const rows = res.data.data.list.map((item: Link) => ({
-                key: item.linkId,
+            const rows = res.data.data.list.map((item: AppVersion) => ({
+                key: item.id,
                 ...item
             }))
             setList(rows)
@@ -47,23 +35,23 @@ function FriendLink() {
         })
     }
 
-    const onFinish = ({ linkName }: any) => {
-        params.linkName = linkName || undefined
+    const onFinish = ({ device }: any) => {
+        params.device = device || undefined
         getList()
     }
 
-    const del = (item: Link) => {
-        if (!item.linkId) {
+    const del = (item: AppVersion) => {
+        if (!item.id) {
             message.error('linkId不能为空！')
             return
         }
-        LinkApi.del({ linkId: item.linkId }).then(res => {
-            message.success('成功删除:' + item.linkName)
+        AppVersionApi.del({ id: item.id }).then(res => {
+            message.success('成功删除')
             getList()
         })
     }
-    const handleEdit = (linkId?: number) => {
-        setCurrentLinkId(linkId)
+    const handleEdit = (id?: number) => {
+        setCurrentId(id)
         setIsEditModalVisible(true)
     }
     const handleAddOk = () => {
@@ -82,42 +70,60 @@ function FriendLink() {
     const columns = [
         {
             title: '编号',
-            dataIndex: 'linkId',
-            key: 'linkId',
-            width: 90
+            dataIndex: 'id',
+            key: 'id',
+            width: 65
         },{
-            title: '名称',
-            dataIndex: 'linkName',
-            key: 'linkName',
-            ellipsis: true
-        },{
-            title: '排序',
-            dataIndex: 'linkSort',
-            key: 'linkSort',
-            width: 80
-        },{
-            title: '跳转链接',
-            dataIndex: 'linkUrl',
-            key: 'linkUrl',
-            ellipsis: true
-        },{
-            title: '更新时间',
-            dataIndex: 'linkTime',
-            key: 'linkTime',
-            width: 180,
-            render: (time: number) => {
-                return (<span>{dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')}</span>)
+            title: '设备',
+            dataIndex: 'device',
+            key: 'device',
+            width: 90,
+            render: (device: number) => {
+                return (<span>{device === 1 ? 'Android' : 'iOS'}</span>)
             }
+        },{
+            title: '最新版本',
+            dataIndex: 'newVersion',
+            key: 'newVersion',
+            width: 120
+        },{
+            title: '最低支持版本',
+            dataIndex: 'minVersion',
+            key: 'minVersion',
+            width: 120
+        },{
+            title: '是否更新',
+            dataIndex: 'isUpdate',
+            key: 'isUpdate',
+            width: 90,
+            render: (isUpdate: number) => {
+                return (<span>{isUpdate === 1 ? '是' : '否'}</span>)
+            }
+        },{
+            title: 'APP下载地址',
+            dataIndex: 'appUrl',
+            key: 'appUrl',
+            ellipsis: true
+        },{
+            title: '更新内容',
+            dataIndex: 'description',
+            key: 'description',
+            ellipsis: true
+        },{
+            title: '创建时间',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            width: 180
         },{
             title: '操作',
             key: 'action',
             width: 140,
-            render: (text: any, record: Link) => (
+            render: (text: any, record: AppVersion) => (
               <Space size="middle">
                 <Tag 
                     color="#2db7f5" 
                     className="cursor-pointer" 
-                    onClick={() => handleEdit(record?.linkId)}>
+                    onClick={() => handleEdit(record?.id)}>
                     编辑
                 </Tag>
                 <Popconfirm
@@ -134,6 +140,7 @@ function FriendLink() {
             )
         }
     ]
+
     return (
         <>
             <Form
@@ -142,9 +149,15 @@ function FriendLink() {
                 form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
-                    <Col span={6} key="linkName">
-                        <Form.Item name="linkName" label="名称">
-                            <Input placeholder="请输入..."/>
+                    <Col span={6} key="device">
+                        <Form.Item name="device" label="设备">
+                            <Select
+                                placeholder="请选择"
+                                allowClear >
+                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option value={1}>Android</Select.Option>
+                                <Select.Option value={2}>iOS</Select.Option>
+                            </Select>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -165,7 +178,7 @@ function FriendLink() {
                             className="mx-2"
                             onClick={() => {
                                 form.resetFields()
-                                params.linkName = undefined
+                                params.device = undefined
                                 getList()
                             }}>
                             重置
@@ -193,35 +206,34 @@ function FriendLink() {
             {
                 isAddModalVisible
                     ? <Modal 
-                        title="添加友链" 
+                        title="添加版本" 
                         closable={false}
                         width={700}
                         visible={isAddModalVisible} 
                         footer={null}>
-                        <LinkAdd 
+                        <AppVersionAdd 
                             handleOk={handleAddOk} 
                             handleCancel={() => setIsAddModalVisible(false)} />
                     </Modal>
                     : <></>
             }
             {
-                isEditModalVisible
+                isEditModalVisible && currentId
                     ? <Modal 
-                        title="修改友链" 
+                        title="编辑版本" 
                         closable={false}
                         width={700}
                         visible={isEditModalVisible} 
                         footer={null}>
-                        <LinkEdit 
-                            linkId={currentLinkId}
+                        <AppVersionEdit 
+                            id={currentId}
                             handleOk={handleEditOk} 
                             handleCancel={() => setIsEditModalVisible(false)} />
                     </Modal>
                     : <></>
             }
-            
         </>
     )
 }
 
-export default FriendLink
+export default AppVersionList
