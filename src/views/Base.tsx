@@ -12,7 +12,8 @@ import {
 	GoogleSquareFilled,
 	ApiFilled,
 	AppstoreFilled,
-	SmileFilled
+	SmileFilled,
+	HeartFilled
   } from '@ant-design/icons'
 import Index from './Index'
 import React, { useEffect, useState } from 'react'
@@ -34,6 +35,12 @@ import MemberList from './member/MemberList'
 import VipList from './member/VipList'
 import OrderList from './member/OrderList'
 import AppVersion from './AppVersion'
+import Tags from './tag'
+import Cities from './city'
+import Posts from './post'
+import Provinces from './province'
+import PostAdd from './post/PostAdd'
+import PostEdit from './post/PostEdit'
 
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
@@ -93,6 +100,15 @@ function Base() {
 							<Menu.Item key="/video/types">视频分类</Menu.Item>
 							<Menu.Item key="/video/scan">视频扫描</Menu.Item>
 							<Menu.Item key="/video/collect">视频采集</Menu.Item>
+						</SubMenu>
+						<SubMenu 
+							key="/fenglou" 
+							icon={<HeartFilled />} 
+							title="凤楼">
+							<Menu.Item key="/fenglou/posts">文章</Menu.Item>
+							<Menu.Item key="/fenglou/cities">城市</Menu.Item>
+							<Menu.Item key="/fenglou/provinces">省份</Menu.Item>
+							<Menu.Item key="/fenglou/tags">标签</Menu.Item>
 						</SubMenu>
 						<Menu.Item 
 							key="/banner" 
@@ -181,6 +197,24 @@ function Base() {
 							</Route>
 							<Route path="/video/scan">
 								<VideoScan/>
+							</Route>
+							<Route exact path="/fenglou/posts">
+								<Posts/>
+							</Route>
+							<Route path="/fenglou/posts/add">
+								<PostAdd />
+							</Route>
+							<Route path="/fenglou/posts/edit">
+								<PostEdit />
+							</Route>
+							<Route exact path="/fenglou/cities">
+								<Cities/>
+							</Route>
+							<Route exact path="/fenglou/provinces">
+								<Provinces/>
+							</Route>
+							<Route exact path="/fenglou/tags">
+								<Tags/>
 							</Route>
 							<Route path="/banner">
 								<BannerList/>

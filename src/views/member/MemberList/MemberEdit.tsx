@@ -6,7 +6,8 @@ import {
     Row,
     Col,
     Switch,
-    Tag
+    Tag,
+    Select
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
@@ -35,6 +36,7 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
         const vipIds = selectedVips.map((item: Vip) => item.vipId)
         const data: Member = {
             memberId,
+            platform: values.platform,
             memberName: values.memberName,
             mobile: values.mobile,
             email: values.email,
@@ -74,6 +76,7 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
     const getInfo = () => {
         MemberApi.findById({ memberId }).then(res => {
             const mem: Member = res.data.data
+            form.setFieldsValue({ platform: mem.platform })
             form.setFieldsValue({ memberName: mem.memberName })
             form.setFieldsValue({ mobile: mem.mobile })
             form.setFieldsValue({ email: mem.email })
@@ -112,6 +115,17 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
                     }
                     <PlusOutlined />
                 </div>
+            </Form.Item>
+            <Form.Item 
+                name="platform" 
+                label="平台"
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear>
+                    <Select.Option value={1}>巨硬AV</Select.Option>
+                    <Select.Option value={2}>凤楼</Select.Option>
+                </Select>
             </Form.Item>
             <Row>
                 <Col span={12}>

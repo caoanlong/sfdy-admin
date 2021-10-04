@@ -1,12 +1,9 @@
 import { 
     Form, 
-    Button, 
-    Input,
+    Button,
     message, 
     Row,
     Col,
-    Switch,
-    Tag,
     InputNumber,
     Select
 } from "antd"

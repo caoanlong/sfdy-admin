@@ -25,6 +25,7 @@ import MemberEditVIP from "./MemberEditVIP"
 const params: MemberFindListParams = {
     pageIndex: 1,
     pageSize: 10,
+    platform: undefined,
     memberName: undefined,
     mobile: undefined,
     email: undefined,
@@ -62,7 +63,8 @@ function MemberList() {
         })
     }
 
-    const onFinish = ({ memberName, mobile, email, isAgent, status, regType }: any) => {
+    const onFinish = ({ platform, memberName, mobile, email, isAgent, status, regType }: any) => {
+        params.platform = platform || undefined
         params.memberName = memberName || undefined
         params.mobile = mobile || undefined
         params.email = email || undefined
@@ -70,6 +72,9 @@ function MemberList() {
         params.status = (status || status === 0) ? status : undefined
         params.regType = (regType || regType === 0) ? regType : undefined
         getList()
+    }
+    const onPlatformChange = (value: number) => {
+        form.setFieldsValue({ platform: value })
     }
     const onIsAgentChange = (value: number) => {
         form.setFieldsValue({ isAgent: value })
@@ -120,11 +125,13 @@ function MemberList() {
             key: 'memberId',
             width: 65,
         },{
-            title: '名称',
-            dataIndex: 'memberName',
-            key: 'memberName',
-            ellipsis: true,
+            title: '平台',
+            dataIndex: 'platform',
+            key: 'platform',
             width: 80,
+            render: (platform: number) => {
+                return (platform === 1 ? '巨硬AV' : '凤楼')
+            }
         },{
             title: '邮箱',
             dataIndex: 'email',
@@ -158,7 +165,7 @@ function MemberList() {
             key: 'regType',
             width: 90,
             render: (regType: number) => {
-                if (regType === 1) return (<span>手机号</span>)
+                if (regType === 1) return (<span>手机</span>)
                 if (regType === 2) return (<span>邮箱</span>)
                 if (regType === 3) return (<span>账号密码</span>)
                 return (<span>管理添加</span>)
@@ -169,20 +176,25 @@ function MemberList() {
             key: 'totalRecharge',
             width: 90,
         },{
-            title: '登录时间',
-            dataIndex: 'loginTime',
-            key: 'loginTime',
-            width: 180,
-            render: (time: Date) => {
-                return (<span>{time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : '未登录'}</span>)
-            }
+            title: '余额',
+            dataIndex: 'balance',
+            key: 'balance',
+            width: 80,
         },{
             title: '注册时间',
             dataIndex: 'createTime',
             key: 'createTime',
-            width: 180,
+            width: 120,
             render: (time: Date) => {
                 return (<span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>)
+            }
+        },{
+            title: '登录时间',
+            dataIndex: 'loginTime',
+            key: 'loginTime',
+            width: 120,
+            render: (time: Date) => {
+                return (<span>{time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : ''}</span>)
             }
         },{
             title: '登录次数',
@@ -229,6 +241,19 @@ function MemberList() {
                 form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
+                    <Col span={6} key="platform">
+                        <Form.Item name="platform" label="平台">
+                            <Select
+                                placeholder="请选择"
+                                allowClear 
+                                onChange={onPlatformChange}>
+                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option value={1}>巨硬AV</Select.Option>
+                                <Select.Option value={2}>凤楼</Select.Option>
+                                <Select.Option value={5}>快充</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
                     <Col span={6} key="memberName">
                         <Form.Item name="memberName" label="名称">
                             <Input placeholder="请输入..."/>
@@ -302,6 +327,7 @@ function MemberList() {
                             className="mx-2"
                             onClick={() => {
                                 form.resetFields()
+                                params.platform = undefined
                                 params.memberName = undefined
                                 params.mobile = undefined
                                 params.email = undefined

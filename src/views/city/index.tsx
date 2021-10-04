@@ -1,21 +1,32 @@
-import React, { useEffect, useState } from "react"
-import { Button, Col, Form, message, Modal, Popconfirm, Row, Select, Space, Table, Tag } from "antd"
+import { 
+    Table, 
+    Tag, 
+    Form, 
+    Row, 
+    Col, 
+    Button, 
+    Input, 
+    Space, 
+    Popconfirm, 
+    Modal,
+    message 
+} from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import { AppVersion } from "../../types"
-import AppVersionApi, { AppVersionFindListParams } from "../../api/AppVersionApi"
-import AppVersionAdd from "./AppVersionAdd"
-import AppVersionEdit from "./AppVersionEdit"
+import React, { useEffect, useState } from "react"
+import { City } from '../../types'
+import CityApi, { CityFindListParams } from "../../api/CityApi"
+import CityAdd from "./CityAdd"
+import CityEdit from "./CityEdit"
 
-
-const params: AppVersionFindListParams = {
+const params: CityFindListParams = {
     pageIndex: 1,
     pageSize: 10,
-    device: undefined
+    name: undefined
 }
 
-function AppVersionList() {
+function Cities() {
     const [ loading, setLoading ] = useState(false)
-    const [ list, setList ] = useState<AppVersion[]>([])
+    const [ list, setList ] = useState<City[]>([])
     const [ total, setTotal ] = useState(0)
     const [ form ] = Form.useForm()
     const [ isAddModalVisible, setIsAddModalVisible ] = useState(false)
@@ -24,9 +35,9 @@ function AppVersionList() {
 
     const getList = () => {
         setLoading(true)
-        AppVersionApi.findList(params).then(res => {
+        CityApi.findList(params).then(res => {
             setTotal(res.data.data.total)
-            const rows = res.data.data.list.map((item: AppVersion) => ({
+            const rows = res.data.data.list.map((item: City) => ({
                 key: item.id,
                 ...item
             }))
@@ -35,18 +46,18 @@ function AppVersionList() {
         })
     }
 
-    const onFinish = ({ device }: any) => {
-        params.device = device || undefined
+    const onFinish = ({ name }: any) => {
+        params.name = name || undefined
         getList()
     }
 
-    const del = (item: AppVersion) => {
+    const del = (item: City) => {
         if (!item.id) {
-            message.error('linkId不能为空！')
+            message.error('id不能为空！')
             return
         }
-        AppVersionApi.del({ id: item.id }).then(res => {
-            message.success('成功删除')
+        CityApi.del({ id: item.id }).then(res => {
+            message.success('成功删除:' + item.name)
             getList()
         })
     }
@@ -72,66 +83,32 @@ function AppVersionList() {
             title: '编号',
             dataIndex: 'id',
             key: 'id',
-            width: 65
+            width: 90
         },{
-            title: '平台',
-            dataIndex: 'platform',
-            key: 'platform',
-            width: 90,
-            render: (platform: number) => {
-                return (<span>{platform === 1 ? 'Jyav' : '凤楼'}</span>)
-            }
+            title: '省份',
+            dataIndex: 'pName',
+            key: 'pName',
+            ellipsis: true
         },{
-            title: '设备',
-            dataIndex: 'device',
-            key: 'device',
-            width: 90,
-            render: (device: number) => {
-                return (<span>{device === 1 ? 'Android' : 'iOS'}</span>)
-            }
+            title: '名称',
+            dataIndex: 'name',
+            key: 'name',
+            ellipsis: true
         },{
-            title: '最新版本',
-            dataIndex: 'newVersion',
-            key: 'newVersion',
-            width: 120
+            title: '名称code',
+            dataIndex: 'ename',
+            key: 'ename',
+            ellipsis: true
         },{
-            title: '最新Code',
-            dataIndex: 'newVersionCode',
-            key: 'newVersionCode',
-            width: 100
-        },{
-            title: '最低版本',
-            dataIndex: 'minVersion',
-            key: 'minVersion',
-            width: 120
-        },{
-            title: '最低Code',
-            dataIndex: 'minVersionCode',
-            key: 'minVersionCode',
-            width: 100
-        },{
-            title: '是否更新',
-            dataIndex: 'isUpdate',
-            key: 'isUpdate',
-            width: 90,
-            render: (isUpdate: number) => {
-                return (<span>{isUpdate === 1 ? '是' : '否'}</span>)
-            }
-        },{
-            title: '大小(KB)',
-            dataIndex: 'size',
-            key: 'size',
+            title: '排序',
+            dataIndex: 'sort',
+            key: 'sort',
             width: 80
-        },{
-            title: '创建时间',
-            dataIndex: 'createTime',
-            key: 'createTime',
-            width: 180
         },{
             title: '操作',
             key: 'action',
             width: 140,
-            render: (text: any, record: AppVersion) => (
+            render: (text: any, record: City) => (
               <Space size="middle">
                 <Tag 
                     color="#2db7f5" 
@@ -153,7 +130,6 @@ function AppVersionList() {
             )
         }
     ]
-
     return (
         <>
             <Form
@@ -162,15 +138,9 @@ function AppVersionList() {
                 form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
-                    <Col span={6} key="device">
-                        <Form.Item name="device" label="设备">
-                            <Select
-                                placeholder="请选择"
-                                allowClear >
-                                <Select.Option value="">全部</Select.Option>
-                                <Select.Option value={1}>Android</Select.Option>
-                                <Select.Option value={2}>iOS</Select.Option>
-                            </Select>
+                    <Col span={6} key="name">
+                        <Form.Item name="name" label="名称">
+                            <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -191,7 +161,7 @@ function AppVersionList() {
                             className="mx-2"
                             onClick={() => {
                                 form.resetFields()
-                                params.device = undefined
+                                params.name = undefined
                                 getList()
                             }}>
                             重置
@@ -219,12 +189,12 @@ function AppVersionList() {
             {
                 isAddModalVisible
                     ? <Modal 
-                        title="添加版本" 
+                        title="添加城市" 
                         closable={false}
                         width={700}
                         visible={isAddModalVisible} 
                         footer={null}>
-                        <AppVersionAdd 
+                        <CityAdd 
                             handleOk={handleAddOk} 
                             handleCancel={() => setIsAddModalVisible(false)} />
                     </Modal>
@@ -233,20 +203,21 @@ function AppVersionList() {
             {
                 isEditModalVisible && currentId
                     ? <Modal 
-                        title="编辑版本" 
+                        title="修改城市" 
                         closable={false}
                         width={700}
                         visible={isEditModalVisible} 
                         footer={null}>
-                        <AppVersionEdit 
+                        <CityEdit 
                             id={currentId}
                             handleOk={handleEditOk} 
                             handleCancel={() => setIsEditModalVisible(false)} />
                     </Modal>
                     : <></>
             }
+            
         </>
     )
 }
 
-export default AppVersionList
+export default Cities

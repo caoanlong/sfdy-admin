@@ -4,7 +4,8 @@ import {
     Input,
     message, 
     Row,
-    Col
+    Col,
+    Select
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useState } from "react"
@@ -27,6 +28,7 @@ function MemberAdd({ handleOk, handleCancel }: MemberAddProps) {
     }
     const onFinish = (values: any) => {
         const data: Member = {
+            platform: values.platform,
             memberName: values.memberName,
             mobile: values.mobile,
             email: values.email,
@@ -81,6 +83,17 @@ function MemberAdd({ handleOk, handleCancel }: MemberAddProps) {
                     }
                     <PlusOutlined />
                 </div>
+            </Form.Item>
+            <Form.Item 
+                name="platform" 
+                label="平台"
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear>
+                    <Select.Option value={1}>巨硬AV</Select.Option>
+                    <Select.Option value={2}>凤楼</Select.Option>
+                </Select>
             </Form.Item>
             <Form.Item 
                 name="isAgent" 

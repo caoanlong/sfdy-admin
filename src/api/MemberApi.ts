@@ -5,6 +5,7 @@ import request from '../utils/request'
 export type MemberFindListParams = {
     pageIndex?: number, 
     pageSize?: number,
+    platform?: number,
     memberName?: string,
     mobile?: string,
     email?: string,

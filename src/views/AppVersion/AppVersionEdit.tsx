@@ -7,7 +7,8 @@ import {
     Row,
     Col,
     Select,
-    Switch
+    Switch,
+    InputNumber
 } from "antd"
 import { AppVersion } from "../../types"
 import AppVersionApi from "../../api/AppVersionApi"
@@ -28,12 +29,16 @@ function AppVersionAdd({ id, handleOk, handleCancel }: AppVersionAddProps) {
         console.log(values)
         const data: AppVersion = {
             id,
+            platform: values.platform,
             newVersion: values.newVersion,
+            newVersionCode: values.newVersionCode,
             minVersion: values.minVersion,
+            minVersionCode: values.minVersionCode,
             appUrl: values.appUrl,
             description: values.description,
             isUpdate: values.isUpdate ? 1 : 0,
-            device: values.device
+            device: values.device,
+            size: values.size
         }
         AppVersionApi.update(data).then(res => {
             message.success('修改成功！')
@@ -43,13 +48,17 @@ function AppVersionAdd({ id, handleOk, handleCancel }: AppVersionAddProps) {
 
     const getInfo = () => {
         AppVersionApi.findById({ id }).then(res => {
-            const link: AppVersion = res.data.data
-            form.setFieldsValue({ device: link.device })
-            form.setFieldsValue({ newVersion: link.newVersion })
-            form.setFieldsValue({ minVersion: link.minVersion })
-            form.setFieldsValue({ appUrl: link.appUrl })
-            form.setFieldsValue({ description: link.description })
-            form.setFieldsValue({ isUpdate: link.isUpdate ? true : false })
+            const appVersion: AppVersion = res.data.data
+            form.setFieldsValue({ platform: appVersion.platform })
+            form.setFieldsValue({ device: appVersion.device })
+            form.setFieldsValue({ size: appVersion.size })
+            form.setFieldsValue({ newVersion: appVersion.newVersion })
+            form.setFieldsValue({ newVersionCode: appVersion.newVersionCode })
+            form.setFieldsValue({ minVersion: appVersion.minVersion })
+            form.setFieldsValue({ minVersionCode: appVersion.minVersionCode })
+            form.setFieldsValue({ appUrl: appVersion.appUrl })
+            form.setFieldsValue({ description: appVersion.description })
+            form.setFieldsValue({ isUpdate: appVersion.isUpdate ? true : false })
         })
     }
 
@@ -63,6 +72,17 @@ function AppVersionAdd({ id, handleOk, handleCancel }: AppVersionAddProps) {
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
+            <Form.Item 
+                name="platform" 
+                label="平台" 
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear >
+                    <Select.Option value={1}>Jyav</Select.Option>
+                    <Select.Option value={2}>凤楼</Select.Option>
+                </Select>
+            </Form.Item>
             <Form.Item 
                 name="device" 
                 label="设备" 
@@ -81,10 +101,28 @@ function AppVersionAdd({ id, handleOk, handleCancel }: AppVersionAddProps) {
                 <Input placeholder="请输入..."/>
             </Form.Item>
             <Form.Item 
+                name="newVersionCode" 
+                label="最新Code" 
+                rules={[{ required: true, message: '最新版本Code不能为空!' }]}>
+                <InputNumber min={1} max={10000} />
+            </Form.Item>
+            <Form.Item 
                 name="minVersion" 
-                label="最小支持版本" 
+                label="最小版本" 
                 rules={[{ required: true, message: '最小支持版本不能为空!' }]}>
                 <Input placeholder="请输入..."/>
+            </Form.Item>
+            <Form.Item 
+                name="minVersionCode" 
+                label="最小版本Code" 
+                rules={[{ required: true, message: '最小支持版本Code不能为空!' }]}>
+                <InputNumber min={1} max={10000} />
+            </Form.Item>
+            <Form.Item 
+                name="size" 
+                label="大小(KB)" 
+                rules={[{ required: true, message: '大小不能为空!' }]}>
+                <InputNumber min={1} />
             </Form.Item>
             <Form.Item 
                 name="appUrl" 

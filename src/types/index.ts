@@ -131,6 +131,7 @@ export type Vip = {
 
 export type Member = {
     memberId?: number,
+    platform?: number,
     memberName?: string,
     mobile?: string,
     email?: string,
@@ -142,6 +143,7 @@ export type Member = {
     status: number, // 0: 禁用， 1： 正常
     randomCode?: string, // 推广链接随机码
     totalRecharge?: number,  // 充值总额，默认为0未充值
+    balance?: number,
     loginIp?: number,
     loginNum?: number,
     lastLoginIp?: number,
@@ -178,12 +180,53 @@ export type Order = {
 export type AppVersion = {
     id?: number,
     appId?: string,
+    platform?: number,
     appName?: string,
     newVersion: string,
+    newVersionCode: number,
     minVersion: string,
+    minVersionCode: number,
     appUrl: string,
     description: string,
     isUpdate: number,
     device: number, // 1: 安卓 2: iOS
+    size: number,
     createTime?: Date
+}
+
+export type TagItem = {
+    id?: number,
+    name?: string
+}
+
+export type City = {
+    id?: number,
+    pId?: number,
+    name?: string,
+    ename?: string,
+    sort?: number,
+    pName?: string
+}
+
+export type Province = {
+    id?: number,
+    name?: string,
+    ename?: string,
+    sort?: number
+}
+
+export type Post = {
+    id?: number,
+    title?: string,
+    content?: string,
+    image?: string,
+    city?: number,
+    province?: number,
+    cityName?: string,
+    provinceName?: string,
+    imageFile?: File,
+    createTime?: Date,
+    updateTime?: Date,
+    tags?: number[],
+    tagList?: TagItem[]
 }
