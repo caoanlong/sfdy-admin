@@ -8,11 +8,9 @@ import {
     Select
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import React, { ChangeEvent, useEffect, useState } from "react"
-// 引入编辑器样式
-import 'braft-editor/dist/index.css'
-// 引入编辑器组件
-import BraftEditor from 'braft-editor'
+import React, { ChangeEvent, useEffect, useRef, useState } from "react"
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import { City, Post, Province, TagItem } from "../../types"
 import CityApi from "../../api/CityApi"
 import ProvinceApi from "../../api/ProvinceApi"
@@ -21,6 +19,7 @@ import TagApi from "../../api/TagApi"
 import PostApi from "../../api/PostApi"
 import { formDataReq } from "../../utils/tools"
 import { SITE_NAME } from "../../utils/consts"
+import CommonApi from "../../api/CommonApi"
 
 
 function PostEdit() {
@@ -34,6 +33,9 @@ function PostEdit() {
     const [ tags, setTags ] = useState<TagItem[]>()
     const [ imageUrl, setImageUrl ] = useState<string>('')
     const [ imageFile, setImageFile ] = useState<File>()
+    const [ content, setContent ] = useState<string>('')
+
+    const quill = useRef<any>()
 
     const onFinish = (values: any) => {
         const data: Post = {
@@ -92,7 +94,9 @@ function PostEdit() {
         PostApi.findById({ id }).then(res => {
             const post: Post = res.data.data
             form.setFieldsValue({ title: post.title })
-            form.setFieldsValue({ content: BraftEditor.createEditorState(post.content) })
+            if (post.content) {
+                setContent(post.content)
+            }
             if (post.province) {
                 form.setFieldsValue({ pId: post.province })
                 getCities(post.province)
@@ -113,6 +117,41 @@ function PostEdit() {
         getTags()
         getInfo()
     }, [])
+
+    const modules = {
+        toolbar: {
+            container: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['bold', 'italic', 'underline','strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image'],
+                ['clean'],
+            ],
+            handlers: {
+                image: () => {
+                    const quillEditor = quill.current.getEditor()
+                    const input = document.createElement('input')
+                    input.setAttribute('type', 'file')
+                    input.setAttribute('accept', 'image/*')
+                    input.addEventListener('change', () => {
+                        const file = input.files?.[0]
+                        const data = { file }
+                        const formData = formDataReq(data)
+                        CommonApi.upload('fenglou', formData).then(res => {
+                            console.log(res.data)
+                            const range = quillEditor.getSelection()
+                            const url = process.env.NODE_ENV === 'development' ? SITE_NAME + res.data.data : res.data.data
+                            quillEditor.insertEmbed(range.index, 'image', url);
+                        })
+                    })
+                    input.click()
+                }
+            }
+        }
+    }
 
     return (
         <Form
@@ -216,13 +255,16 @@ function PostEdit() {
                 </div>
             </Form.Item>
             <Form.Item 
-                name="content" 
+                className="mb-16"
                 label="内容" 
                 rules={[{ required: true, message: '内容不能为空!' }]}>
-                <BraftEditor
-                    className="border"
-                    controls={['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media' ]}
-                    placeholder="请输入正文内容"
+                <ReactQuill 
+                    ref={quill}
+                    style={{ height: 500 }}
+                    theme="snow" 
+                    modules={modules}
+                    value={content} 
+                    onChange={setContent}
                 />
             </Form.Item>
             <Row>
