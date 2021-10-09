@@ -136,10 +136,58 @@ function PostAdd() {
             className="bg-white p-4 shadow m-4"
             name="postAdd"
             form={form}
-            labelCol={{ span: 4 }}
             onFinish={onFinish}>
             <Row>
-                <Col span={12}>
+                <Col span={6} >
+                    <Form.Item 
+                        name="imageUrl" 
+                        label="图片" 
+                        rules={[{ required: true, message: '图片不能为空!' }]}>
+                        <div 
+                            className="w-40 h-40 bg-gray-100 border border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400">
+                            <input 
+                                className="w-full h-full block opacity-0 absolute z-20" 
+                                type="file" 
+                                onChange={handleImgChange}
+                            />
+                            {
+                                imageUrl
+                                ? <img 
+                                    className="w-full h-full block absolute z-10 object-cover" 
+                                    src={imageUrl} 
+                                    alt="img"
+                                /> : <></>
+                            }
+                            <PlusOutlined />
+                        </div>
+                    </Form.Item>
+                </Col>
+                <Col span={9}>
+                    <Form.Item 
+                        labelCol={{ span: 8 }}
+                        name="title" 
+                        label="标题" 
+                        rules={[{ required: true, message: '标题不能为空!' }]}>
+                        <Input placeholder="请输入..."/>
+                    </Form.Item>
+                    <Form.Item 
+                        labelCol={{ span: 8 }}
+                        name="tags" 
+                        label="标签">
+                        <Select
+                            placeholder="请选择"
+                            allowClear 
+                            mode="multiple">
+                            {
+                                tags && tags.length && 
+                                tags.map((item: TagItem) => (
+                                    <Select.Option key={item.id} value={item.id || ''}>{item.name}</Select.Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={9}>
                     <Form.Item 
                         labelCol={{ span: 8 }}
                         name="pId" 
@@ -160,8 +208,6 @@ function PostAdd() {
                             }
                         </Select>
                     </Form.Item>
-                </Col>
-                <Col span={12}>
                     <Form.Item 
                         labelCol={{ span: 8 }}
                         name="city" 
@@ -181,58 +227,8 @@ function PostAdd() {
                 </Col>
             </Row>
             
-            <Row>
-                <Col span={12}>
-                    <Form.Item 
-                        labelCol={{ span: 8 }}
-                        name="title" 
-                        label="标题" 
-                        rules={[{ required: true, message: '标题不能为空!' }]}>
-                        <Input placeholder="请输入..."/>
-                    </Form.Item>
-                </Col>
-                <Col span={12}>
-                    <Form.Item 
-                        labelCol={{ span: 8 }}
-                        name="tags" 
-                        label="标签">
-                        <Select
-                            placeholder="请选择"
-                            allowClear 
-                            mode="multiple">
-                            {
-                                tags && tags.length && 
-                                tags.map((item: TagItem) => (
-                                    <Select.Option key={item.id} value={item.id || ''}>{item.name}</Select.Option>
-                                ))
-                            }
-                        </Select>
-                    </Form.Item>
-                </Col>
-            </Row>
             <Form.Item 
-                name="imageUrl" 
-                label="图片" 
-                rules={[{ required: true, message: '图片不能为空!' }]}>
-                <div 
-                    className="w-40 h-40 bg-gray-100 border border-gray-300 border-dashed relative rounded-sm flex justify-center items-center text-2xl text-gray-400">
-                    <input 
-                        className="w-full h-full block opacity-0 absolute z-20" 
-                        type="file" 
-                        onChange={handleImgChange}
-                    />
-                    {
-                        imageUrl
-                        ? <img 
-                            className="w-full h-full block absolute z-10 object-cover" 
-                            src={imageUrl} 
-                            alt="img"
-                        /> : <></>
-                    }
-                    <PlusOutlined />
-                </div>
-            </Form.Item>
-            <Form.Item 
+                labelCol={{ span: 1 }}
                 className="mb-16"
                 label="内容" 
                 rules={[{ required: true, message: '内容不能为空!' }]}>
@@ -246,7 +242,7 @@ function PostAdd() {
                 />
             </Form.Item>
             <Row>
-                <Col span={24} offset={4}>
+                <Col span={24} offset={1}>
                     <Button className="mr-3" onClick={() => history.goBack()}>取消</Button>
                     <Button type="primary" htmlType="submit">确定</Button>
                 </Col>

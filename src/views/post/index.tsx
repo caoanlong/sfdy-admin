@@ -131,8 +131,8 @@ function Posts() {
                 form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
-                    <Col span={6} key="linkName">
-                        <Form.Item name="linkName" label="名称">
+                    <Col span={6} key="title">
+                        <Form.Item name="title" label="名称">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
