@@ -10,10 +10,10 @@ import {
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { BANNER_TYPES } from "./BannerList"
 import BannerApi from "../../api/BannerApi"
 import { Banner } from "../../types"
 import { formDataReq } from "../../utils/tools"
+import { DEVICE_TYPES, PLATFORM_MAP } from "../../utils/config"
 
 type BannerAddProps = {
     handleOk: Function, 
@@ -22,7 +22,6 @@ type BannerAddProps = {
 
 function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     const [ form ] = Form.useForm()
-    const [ types, setTypes ] = useState<{key: string, value: string}[]>([])
     const [ imageUrl, setImageUrl ] = useState<string>('')
     const [ bannerFile, setBannerFile ] = useState<File>()
 
@@ -31,6 +30,7 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     }
     const onFinish = (values: any) => {
         const data: Banner = {
+            platform: values.platform,
             bannerType: values.bannerType,
             bannerName: values.bannerName,
             bannerSort: values.bannerSort,
@@ -66,9 +66,7 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
     }
 
     useEffect(() => {
-        const list = Object.keys(BANNER_TYPES).map((key: string) => ({ key, value: BANNER_TYPES[key]}))
-        setTypes(list)
-        form.setFieldsValue({ bannerType: '1' })
+        form.setFieldsValue({ bannerType: 1 })
         form.setFieldsValue({ bannerSort: 1 })
     }, [])
 
@@ -79,6 +77,20 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
             <Form.Item 
+                name="platform" 
+                label="平台" 
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear >
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
+            <Form.Item 
                 name="bannerType" 
                 label="类型" 
                 rules={[{ required: true, message: '类型不能为空!' }]}>
@@ -86,12 +98,8 @@ function BannerAdd({ handleOk, handleCancel }: BannerAddProps) {
                     placeholder="请选择"
                     allowClear>
                     {
-                        types.map((type: {key: string, value: string}) => (
-                            <Select.Option 
-                                key={type.key} 
-                                value={type.key}>
-                                { type.value }
-                            </Select.Option>
+                        Object.keys(DEVICE_TYPES).map((item: string) => (
+                            <Select.Option key={item} value={+item}>{DEVICE_TYPES[+item]}</Select.Option>
                         ))
                     }
                 </Select>

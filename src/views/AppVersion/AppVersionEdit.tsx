@@ -12,6 +12,7 @@ import {
 } from "antd"
 import { AppVersion } from "../../types"
 import AppVersionApi from "../../api/AppVersionApi"
+import { PLATFORM_MAP } from "../../utils/config"
 
 type AppVersionAddProps = {
     id: number,
@@ -79,8 +80,11 @@ function AppVersionAdd({ id, handleOk, handleCancel }: AppVersionAddProps) {
                 <Select
                     placeholder="请选择"
                     allowClear >
-                    <Select.Option value={1}>Jyav</Select.Option>
-                    <Select.Option value={2}>凤楼</Select.Option>
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
                 </Select>
             </Form.Item>
             <Form.Item 

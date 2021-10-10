@@ -1,23 +1,33 @@
-import React, { useEffect, useState } from "react"
-import { Button, Col, Form, message, Modal, Popconfirm, Row, Select, Space, Table, Tag } from "antd"
+import { 
+    Table, 
+    Tag, 
+    Form, 
+    Row, 
+    Col, 
+    Button, 
+    Space, 
+    Popconfirm, 
+    Modal,
+    message, 
+    Select
+} from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import { AppVersion } from "../../types"
-import AppVersionApi, { AppVersionFindListParams } from "../../api/AppVersionApi"
-import AppVersionAdd from "./AppVersionAdd"
-import AppVersionEdit from "./AppVersionEdit"
+import React, { useEffect, useState } from "react"
+import SeoAdd from "./SeoAdd"
+import SeoEdit from "./SeoEdit"
+import SeoApi, { SeoFindListParams } from "../../api/SeoApi"
+import { Seo } from "../../types"
 import { PLATFORM_MAP } from "../../utils/config"
 
-
-const params: AppVersionFindListParams = {
+const params: SeoFindListParams = {
     pageIndex: 1,
     pageSize: 10,
-    device: undefined,
     platform: undefined
 }
 
-function AppVersionList() {
+function SeoList() {
     const [ loading, setLoading ] = useState(false)
-    const [ list, setList ] = useState<AppVersion[]>([])
+    const [ list, setList ] = useState<Seo[]>([])
     const [ total, setTotal ] = useState(0)
     const [ form ] = Form.useForm()
     const [ isAddModalVisible, setIsAddModalVisible ] = useState(false)
@@ -26,10 +36,10 @@ function AppVersionList() {
 
     const getList = () => {
         setLoading(true)
-        AppVersionApi.findList(params).then(res => {
+        SeoApi.findList(params).then(res => {
             setTotal(res.data.data.total)
-            const rows = res.data.data.list.map((item: AppVersion) => ({
-                key: item.id,
+            const rows = res.data.data.list.map((item: Seo) => ({
+                key: item.seoId,
                 ...item
             }))
             setList(rows)
@@ -37,8 +47,7 @@ function AppVersionList() {
         })
     }
 
-    const onFinish = ({ device, platform }: any) => {
-        params.device = device || undefined
+    const onFinish = ({ platform }: any) => {
         params.platform = platform || undefined
         getList()
     }
@@ -47,18 +56,18 @@ function AppVersionList() {
         form.setFieldsValue({ platform: value })
     }
 
-    const del = (item: AppVersion) => {
-        if (!item.id) {
-            message.error('linkId不能为空！')
+    const del = (item: Seo) => {
+        if (!item.seoId) {
+            message.error('seoId不能为空！')
             return
         }
-        AppVersionApi.del({ id: item.id }).then(res => {
-            message.success('成功删除')
+        SeoApi.del({ seoId: item.seoId }).then(res => {
+            message.success('成功删除:' + item.seoTitle)
             getList()
         })
     }
-    const handleEdit = (id?: number) => {
-        setCurrentId(id)
+    const handleEdit = (seoId?: number) => {
+        setCurrentId(seoId)
         setIsEditModalVisible(true)
     }
     const handleAddOk = () => {
@@ -77,9 +86,9 @@ function AppVersionList() {
     const columns = [
         {
             title: '编号',
-            dataIndex: 'id',
-            key: 'id',
-            width: 65
+            dataIndex: 'seoId',
+            key: 'seoId',
+            width: 90
         },{
             title: '平台',
             dataIndex: 'platform',
@@ -87,61 +96,30 @@ function AppVersionList() {
             width: 90,
             render: (platform: number) => PLATFORM_MAP[platform]
         },{
-            title: '设备',
-            dataIndex: 'device',
-            key: 'device',
-            width: 90,
-            render: (device: number) => {
-                return (<span>{device === 1 ? 'Android' : 'iOS'}</span>)
-            }
+            title: '标题',
+            dataIndex: 'seoTitle',
+            key: 'seoTitle',
+            ellipsis: true
         },{
-            title: '最新版本',
-            dataIndex: 'newVersion',
-            key: 'newVersion',
-            width: 120
+            title: '关键词',
+            dataIndex: 'seoKeywords',
+            key: 'seoKeywords',
+            ellipsis: true
         },{
-            title: '最新Code',
-            dataIndex: 'newVersionCode',
-            key: 'newVersionCode',
-            width: 100
-        },{
-            title: '最低版本',
-            dataIndex: 'minVersion',
-            key: 'minVersion',
-            width: 120
-        },{
-            title: '最低Code',
-            dataIndex: 'minVersionCode',
-            key: 'minVersionCode',
-            width: 100
-        },{
-            title: '是否更新',
-            dataIndex: 'isUpdate',
-            key: 'isUpdate',
-            width: 90,
-            render: (isUpdate: number) => {
-                return (<span>{isUpdate === 1 ? '是' : '否'}</span>)
-            }
-        },{
-            title: '大小(KB)',
-            dataIndex: 'size',
-            key: 'size',
-            width: 80
-        },{
-            title: '创建时间',
-            dataIndex: 'createTime',
-            key: 'createTime',
-            width: 180
+            title: '描述',
+            dataIndex: 'seoDescription',
+            key: 'seoDescription',
+            ellipsis: true
         },{
             title: '操作',
             key: 'action',
-            width: 140,
-            render: (text: any, record: AppVersion) => (
+            width: 180,
+            render: (text: any, record: Seo) => (
               <Space size="middle">
                 <Tag 
                     color="#2db7f5" 
                     className="cursor-pointer" 
-                    onClick={() => handleEdit(record?.id)}>
+                    onClick={() => handleEdit(record?.seoId)}>
                     编辑
                 </Tag>
                 <Popconfirm
@@ -158,7 +136,6 @@ function AppVersionList() {
             )
         }
     ]
-
     return (
         <>
             <Form
@@ -167,17 +144,6 @@ function AppVersionList() {
                 form={form}
                 onFinish={onFinish}>
                 <Row gutter={24}>
-                    <Col span={6} key="device">
-                        <Form.Item name="device" label="设备">
-                            <Select
-                                placeholder="请选择"
-                                allowClear >
-                                <Select.Option value="">全部</Select.Option>
-                                <Select.Option value={1}>Android</Select.Option>
-                                <Select.Option value={2}>iOS</Select.Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
                     <Col span={6} key="platform">
                         <Form.Item name="platform" label="平台">
                             <Select
@@ -211,7 +177,6 @@ function AppVersionList() {
                             className="mx-2"
                             onClick={() => {
                                 form.resetFields()
-                                params.device = undefined
                                 params.platform = undefined
                                 getList()
                             }}>
@@ -240,12 +205,12 @@ function AppVersionList() {
             {
                 isAddModalVisible
                     ? <Modal 
-                        title="添加版本" 
+                        title="添加Seo" 
                         closable={false}
                         width={700}
                         visible={isAddModalVisible} 
                         footer={null}>
-                        <AppVersionAdd 
+                        <SeoAdd 
                             handleOk={handleAddOk} 
                             handleCancel={() => setIsAddModalVisible(false)} />
                     </Modal>
@@ -254,20 +219,21 @@ function AppVersionList() {
             {
                 isEditModalVisible && currentId
                     ? <Modal 
-                        title="编辑版本" 
+                        title="修改Seo" 
                         closable={false}
                         width={700}
                         visible={isEditModalVisible} 
                         footer={null}>
-                        <AppVersionEdit 
-                            id={currentId}
+                        <SeoEdit 
+                            seoId={currentId}
                             handleOk={handleEditOk} 
                             handleCancel={() => setIsEditModalVisible(false)} />
                     </Modal>
                     : <></>
             }
+            
         </>
     )
 }
 
-export default AppVersionList
+export default SeoList

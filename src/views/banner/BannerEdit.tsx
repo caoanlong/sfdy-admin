@@ -10,11 +10,11 @@ import {
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { BANNER_TYPES } from "./BannerList"
 import BannerApi from "../../api/BannerApi"
 import { Banner } from "../../types"
 import { formDataReq } from "../../utils/tools"
 import { SITE_NAME } from "../../utils/consts"
+import { DEVICE_TYPES, PLATFORM_MAP } from "../../utils/config"
 
 
 type BannerEditProps = {
@@ -25,7 +25,6 @@ type BannerEditProps = {
 
 function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     const [ form ] = Form.useForm()
-    const [ types, setTypes ] = useState<{key: string, value: string}[]>([])
     const [ imageUrl, setImageUrl ] = useState<string>('')
     const [ bannerFile, setBannerFile ] = useState<File>()
 
@@ -35,6 +34,7 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     const onFinish = (values: any) => {
         const data: Banner = {
             bannerId,
+            platform: values.platform,
             bannerType: values.bannerType,
             bannerName: values.bannerName,
             bannerSort: values.bannerSort,
@@ -72,9 +72,10 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     const getInfo = () => {
         BannerApi.findById({ bannerId }).then(res => {
             const banner: Banner = res.data.data
-            form.setFieldsValue({ bannerType: banner.bannerType.toString() })
+            form.setFieldsValue({ bannerType: banner.bannerType })
             form.setFieldsValue({ bannerName: banner.bannerName })
             form.setFieldsValue({ bannerSort: banner.bannerSort })
+            form.setFieldsValue({ platform: banner.platform })
             if (banner.bannerLink) {
                 form.setFieldsValue({ bannerLink: banner.bannerLink })
             }
@@ -86,8 +87,6 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
     }
 
     useEffect(() => {
-        const list = Object.keys(BANNER_TYPES).map((key: string) => ({ key, value: BANNER_TYPES[key]}))
-        setTypes(list)
         getInfo()
     }, [])
 
@@ -98,6 +97,20 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
             <Form.Item 
+                name="platform" 
+                label="平台" 
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear >
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option key={item} value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
+            <Form.Item 
                 name="bannerType" 
                 label="类型" 
                 rules={[{ required: true, message: '类型不能为空!' }]}>
@@ -105,12 +118,8 @@ function BannerEdit({ bannerId, handleOk, handleCancel }: BannerEditProps) {
                     placeholder="请选择"
                     allowClear>
                     {
-                        types.map((type: {key: string, value: string}) => (
-                            <Select.Option 
-                                key={type.key} 
-                                value={type.key}>
-                                { type.value }
-                            </Select.Option>
+                        Object.keys(DEVICE_TYPES).map((item: string) => (
+                            <Select.Option key={item} value={+item}>{DEVICE_TYPES[+item]}</Select.Option>
                         ))
                     }
                 </Select>

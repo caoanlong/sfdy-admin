@@ -25,10 +25,10 @@ import VideoList from './video/VideoList'
 import VideoTypes from './video/VideoTypes'
 import VideoCollect from './video/VideoCollect'
 import VideoScan from './video/VideoScan'
-import BannerList from './banner/BannerList'
-import SEO from './SEO'
-import FriendLinkList from './friendLink/FriendLinkList'
-import ScriptCode from './ScriptCode'
+import BannerList from './banner'
+import Seo from './seo'
+import FriendLinkList from './friendLink'
+import Notice from './notice'
 import SysUser from './system/SysUser'
 import SysRole from './system/SysRole'
 import MemberList from './member/MemberList'
@@ -36,6 +36,7 @@ import VipList from './member/VipList'
 import OrderList from './member/OrderList'
 import AppVersion from './AppVersion'
 import Tags from './tag'
+import Moneys from './money'
 import Cities from './city'
 import Posts from './post'
 import Provinces from './province'
@@ -90,30 +91,36 @@ function Base() {
 							title="用户">
 							<Menu.Item key="/member/list">用户列表</Menu.Item>
 							<Menu.Item key="/member/order">用户订单</Menu.Item>
-							<Menu.Item key="/member/vip">用户VIP</Menu.Item>
 						</SubMenu>
 						<SubMenu 
-							key="/video" 
+							key="/sezhan" 
 							icon={<PlaySquareFilled />} 
-							title="视频">
-							<Menu.Item key="/video/list">视频列表</Menu.Item>
-							<Menu.Item key="/video/types">视频分类</Menu.Item>
-							<Menu.Item key="/video/scan">视频扫描</Menu.Item>
-							<Menu.Item key="/video/collect">视频采集</Menu.Item>
+							title="色站">
+							<Menu.Item key="/sezhan/videolist">视频列表</Menu.Item>
+							<Menu.Item key="/sezhan/videotypes">视频分类</Menu.Item>
+							<Menu.Item key="/sezhan/videoscan">视频扫描</Menu.Item>
+							<Menu.Item key="/sezhan/videocollect">视频采集</Menu.Item>
+							<Menu.Item key="/sezhan/vip">VIP列表</Menu.Item>
 						</SubMenu>
 						<SubMenu 
 							key="/fenglou" 
 							icon={<HeartFilled />} 
 							title="凤楼">
-							<Menu.Item key="/fenglou/posts">文章</Menu.Item>
-							<Menu.Item key="/fenglou/cities">城市</Menu.Item>
-							<Menu.Item key="/fenglou/provinces">省份</Menu.Item>
-							<Menu.Item key="/fenglou/tags">标签</Menu.Item>
+							<Menu.Item key="/fenglou/posts">资讯列表</Menu.Item>
+							<Menu.Item key="/fenglou/cities">城市列表</Menu.Item>
+							<Menu.Item key="/fenglou/provinces">省份列表</Menu.Item>
+							<Menu.Item key="/fenglou/tags">标签列表</Menu.Item>
+							<Menu.Item key="/fenglou/moneys">充值面额</Menu.Item>
 						</SubMenu>
 						<Menu.Item 
 							key="/banner" 
 							icon={<PictureFilled />}>
 							Banner
+						</Menu.Item>
+						<Menu.Item 
+							key="/notice" 
+							icon={<CodeFilled />}>
+							公告
 						</Menu.Item>
 						<Menu.Item 
 							key="/link" 
@@ -124,11 +131,6 @@ function Base() {
 							key="/seo" 
 							icon={<GoogleSquareFilled />}>
 							SEO
-						</Menu.Item>
-						<Menu.Item 
-							key="/scriptcode" 
-							icon={<CodeFilled />}>
-							脚本代码
 						</Menu.Item>
 						<Menu.Item 
 							key="/appversion" 
@@ -183,19 +185,19 @@ function Base() {
 							<Route path="/member/order">
 								<OrderList/>
 							</Route>
-							<Route path="/member/vip">
+							<Route path="/sezhan/vip">
 								<VipList/>
 							</Route>
-							<Route path="/video/list">
+							<Route path="/sezhan/videolist">
 								<VideoList/>
 							</Route>
-							<Route path="/video/types">
+							<Route path="/sezhan/videotypes">
 								<VideoTypes/>
 							</Route>
-							<Route path="/video/collect">
+							<Route path="/sezhan/videocollect">
 								<VideoCollect/>
 							</Route>
-							<Route path="/video/scan">
+							<Route path="/sezhan/videoscan">
 								<VideoScan/>
 							</Route>
 							<Route exact path="/fenglou/posts">
@@ -216,17 +218,20 @@ function Base() {
 							<Route exact path="/fenglou/tags">
 								<Tags/>
 							</Route>
+							<Route exact path="/fenglou/moneys">
+								<Moneys/>
+							</Route>
 							<Route path="/banner">
 								<BannerList/>
 							</Route>
 							<Route path="/seo">
-								<SEO/>
+								<Seo/>
 							</Route>
 							<Route path="/link">
 								<FriendLinkList/>
 							</Route>
-							<Route path="/scriptcode">
-								<ScriptCode/>
+							<Route path="/notice">
+								<Notice/>
 							</Route>
 							<Route path="/appversion">
 								<AppVersion/>

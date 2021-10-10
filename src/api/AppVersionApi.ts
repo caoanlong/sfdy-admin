@@ -7,7 +7,8 @@ export type AppVersionFindListParams = {
     pageIndex?: number, 
     pageSize?: number,
     appId?: string,
-    device?: number
+    device?: number,
+    platform?: number
 }
 
 class AppVersionApi {

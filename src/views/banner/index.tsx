@@ -9,27 +9,24 @@ import {
     Space, 
     Popconfirm, 
     Modal,
-    message 
+    message, 
+    Select
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import dayjs from 'dayjs'
 import BannerApi, { BannerFindListParams } from "../../api/BannerApi"
 import { Banner } from "../../types"
 import BannerAdd from "./BannerAdd"
 import BannerEdit from "./BannerEdit"
-
-export const BANNER_TYPES: { [key: string]: string} = {
-    '1': '全部',
-    '2': 'H5',
-    '3': 'APP'
-}
+import { DEVICE_TYPES, PLATFORM_MAP } from "../../utils/config"
 
 
 const params: BannerFindListParams = {
     pageIndex: 1,
     pageSize: 10,
-    bannerName: undefined
+    bannerName: undefined,
+    platform: undefined
 }
 function BannerList() {
     const [ loading, setLoading ] = useState(false)
@@ -53,9 +50,14 @@ function BannerList() {
         })
     }
 
-    const onFinish = ({ bannerName }: any) => {
+    const onFinish = ({ bannerName, platform }: any) => {
         params.bannerName = bannerName || undefined
+        params.platform = platform || undefined
         getList()
+    }
+
+    const onPlatformChange = (value: number) => {
+        form.setFieldsValue({ platform: value })
     }
 
     const del = (item: Banner) => {
@@ -97,11 +99,17 @@ function BannerList() {
             key: 'bannerName',
             ellipsis: true
         },{
+            title: '平台',
+            dataIndex: 'platform',
+            key: 'platform',
+            width: 90,
+            render: (platform: number) => PLATFORM_MAP[platform]
+        },{
             title: '类型',
             dataIndex: 'bannerType',
             key: 'bannerType',
-            width: 110,
-            render: (type: number) => (BANNER_TYPES[type])
+            width: 90,
+            render: (type: number) => (DEVICE_TYPES[type])
         },{
             title: '排序',
             dataIndex: 'bannerSort',
@@ -159,6 +167,21 @@ function BannerList() {
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
+                    <Col span={6} key="platform">
+                        <Form.Item name="platform" label="平台">
+                            <Select
+                                placeholder="请选择"
+                                allowClear 
+                                onChange={onPlatformChange}>
+                                <Select.Option value="">全部</Select.Option>
+                                {
+                                    Object.keys(PLATFORM_MAP).map((item: string) => (
+                                        <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                                    ))
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
                 </Row>
                 <Row>
                     <Col span={12}>
@@ -178,6 +201,7 @@ function BannerList() {
                             onClick={() => {
                                 form.resetFields()
                                 params.bannerName = undefined
+                                params.platform = undefined
                                 getList()
                             }}>
                             重置

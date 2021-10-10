@@ -12,6 +12,7 @@ import React, { ChangeEvent, useState } from "react"
 import { formDataReq } from "../../../utils/tools"
 import { Member } from "../../../types"
 import MemberApi from "../../../api/MemberApi"
+import { PLATFORM_MAP } from "../../../utils/config"
 
 type MemberAddProps = {
     handleOk: Function, 
@@ -90,9 +91,12 @@ function MemberAdd({ handleOk, handleCancel }: MemberAddProps) {
                 rules={[{ required: true, message: '平台不能为空!' }]}>
                 <Select
                     placeholder="请选择"
-                    allowClear>
-                    <Select.Option value={1}>巨硬AV</Select.Option>
-                    <Select.Option value={2}>凤楼</Select.Option>
+                    allowClear >
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
                 </Select>
             </Form.Item>
             <Form.Item 

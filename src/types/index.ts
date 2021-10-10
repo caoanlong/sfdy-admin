@@ -95,7 +95,8 @@ export type Banner = {
     bannerTime?: Date,
     bannerFile?: File,
     bannerUrl?: string,
-    bannerLink?: string
+    bannerLink?: string,
+    platform?: number
 }
 
 export type Link = {
@@ -107,7 +108,8 @@ export type Link = {
     linkTime?: number,
     linkUrl: string,
     linkLogo?: string,
-    linkFile?: File
+    linkFile?: File,
+    platform?: number
 }
 
 export type Seo = {
@@ -117,6 +119,7 @@ export type Seo = {
     seoDescription?: string,
     seoTime?: Date,
     seoScript?: string,
+    platform?: number
 }
 
 export type Vip = {
@@ -231,4 +234,20 @@ export type Post = {
     updateTime?: Date,
     tags?: number[],
     tagList?: TagItem[]
+}
+
+export type Notice = {
+    id?: number,
+    title: string,
+    content: string,
+    platform: number,   // 1: jyav 2: fenglou  5: 快速支付
+    createTime?: Date,
+    updateTime?: Date
+}
+
+export type Money = {
+    id?: number,
+    price: number,
+    createTime?: Date,
+    updateTime?: Date
 }

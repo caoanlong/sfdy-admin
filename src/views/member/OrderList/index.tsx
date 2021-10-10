@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, Row, Select, Table } from "antd"
 import { Order } from "../../../types"
 import dayjs from "dayjs"
 import OrderApi, { OrderFindListParams } from "../../../api/OrderApi"
+import { PLATFORM_MAP } from "../../../utils/config"
 
 
 const params: OrderFindListParams = {
@@ -23,12 +24,6 @@ const TYPE_MAP: {[key: number]: string} = {
     1: '充值',
     2: '提现',
     3: '佣金'
-}
-
-const PLATFORM_MAP: {[key: number]: string} = {
-    1: '巨硬AV',
-    2: '凤楼',
-    5: '快充'
 }
 
 function OrderList() {
@@ -94,9 +89,7 @@ function OrderList() {
             dataIndex: 'platform',
             key: 'platform',
             width: 80,
-            render: (platform: number) => {
-                return (PLATFORM_MAP[platform])
-            }
+            render: (platform: number) => PLATFORM_MAP[platform]
         },{
             title: '标题',
             dataIndex: 'title',

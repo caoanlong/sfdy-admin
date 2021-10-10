@@ -5,7 +5,8 @@ import request from '../utils/request'
 export type BannerFindListParams = {
     pageIndex?: number, 
     pageSize?: number,
-    bannerName?: string
+    bannerName?: string,
+    platform?: number
 }
 
 class BannerApi {

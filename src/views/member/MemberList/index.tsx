@@ -21,6 +21,7 @@ import MemberEdit from "./MemberEdit"
 import MemberAdd from "./MemberAdd"
 import VipApi from "../../../api/VipApi"
 import MemberEditVIP from "./MemberEditVIP"
+import { PLATFORM_MAP } from "../../../utils/config"
 
 const params: MemberFindListParams = {
     pageIndex: 1,
@@ -129,9 +130,7 @@ function MemberList() {
             dataIndex: 'platform',
             key: 'platform',
             width: 80,
-            render: (platform: number) => {
-                return (platform === 1 ? '巨硬AV' : '凤楼')
-            }
+            render: (platform: number) => PLATFORM_MAP[platform]
         },{
             title: '邮箱',
             dataIndex: 'email',
@@ -248,9 +247,11 @@ function MemberList() {
                                 allowClear 
                                 onChange={onPlatformChange}>
                                 <Select.Option value="">全部</Select.Option>
-                                <Select.Option value={1}>巨硬AV</Select.Option>
-                                <Select.Option value={2}>凤楼</Select.Option>
-                                <Select.Option value={5}>快充</Select.Option>
+                                {
+                                    Object.keys(PLATFORM_MAP).map((item: string) => (
+                                        <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                                    ))
+                                }
                             </Select>
                         </Form.Item>
                     </Col>

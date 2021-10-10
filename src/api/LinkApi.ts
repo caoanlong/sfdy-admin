@@ -5,7 +5,8 @@ import request from '../utils/request'
 export type LinkFindListParams = {
     pageIndex?: number, 
     pageSize?: number,
-    linkName?: string
+    linkName?: string,
+    platform?: number
 }
 
 class LinkApi {

@@ -5,13 +5,15 @@ import {
     message, 
     Row,
     Col,
-    InputNumber
+    InputNumber,
+    Select
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { Link } from "../../types"
 import LinkApi from "../../api/LinkApi"
 import { formDataReq } from "../../utils/tools"
+import { PLATFORM_MAP } from "../../utils/config"
 
 type LinkAddProps = {
     handleOk: Function, 
@@ -28,6 +30,7 @@ function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
     }
     const onFinish = (values: any) => {
         const data: Link = {
+            platform: values.platform,
             linkName: values.linkName,
             linkSort: values.linkSort,
             linkUrl: values.linkUrl,
@@ -72,6 +75,20 @@ function LinkAdd({ handleOk, handleCancel }: LinkAddProps) {
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
+            <Form.Item 
+                name="platform" 
+                label="平台" 
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear >
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option key={item} value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
             <Form.Item 
                 name="linkName" 
                 label="名称" 

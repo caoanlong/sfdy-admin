@@ -15,6 +15,7 @@ import { formDataReq } from "../../../utils/tools"
 import { Member, Vip } from "../../../types"
 import { SITE_NAME } from "../../../utils/consts"
 import MemberApi from "../../../api/MemberApi"
+import { PLATFORM_MAP } from "../../../utils/config"
 
 type MemberEditProps = {
     memberId?: number,
@@ -122,9 +123,12 @@ function MemberEdit({ memberId, handleOk, handleCancel }: MemberEditProps) {
                 rules={[{ required: true, message: '平台不能为空!' }]}>
                 <Select
                     placeholder="请选择"
-                    allowClear>
-                    <Select.Option value={1}>巨硬AV</Select.Option>
-                    <Select.Option value={2}>凤楼</Select.Option>
+                    allowClear >
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
                 </Select>
             </Form.Item>
             <Row>

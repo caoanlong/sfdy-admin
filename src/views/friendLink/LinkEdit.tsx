@@ -5,7 +5,8 @@ import {
     message, 
     Row,
     Col,
-    InputNumber
+    InputNumber,
+    Select
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useState } from "react"
@@ -13,6 +14,7 @@ import { Link } from "../../types"
 import LinkApi from "../../api/LinkApi"
 import { formDataReq } from "../../utils/tools"
 import { SITE_NAME } from "../../utils/consts"
+import { PLATFORM_MAP } from "../../utils/config"
 
 type LinkEditProps = {
     linkId?: number,
@@ -31,6 +33,7 @@ function LinkEdit({ linkId, handleOk, handleCancel }: LinkEditProps) {
     const onFinish = (values: any) => {
         const data: Link = {
             linkId,
+            platform: values.platform,
             linkName: values.linkName,
             linkSort: values.linkSort,
             linkUrl: values.linkUrl,
@@ -68,6 +71,7 @@ function LinkEdit({ linkId, handleOk, handleCancel }: LinkEditProps) {
     const getInfo = () => {
         LinkApi.findById({ linkId }).then(res => {
             const link: Link = res.data.data
+            form.setFieldsValue({ platform: link.platform })
             form.setFieldsValue({ linkName: link.linkName })
             form.setFieldsValue({ linkSort: link.linkSort })
             form.setFieldsValue({ linkUrl: link.linkUrl })
@@ -90,6 +94,20 @@ function LinkEdit({ linkId, handleOk, handleCancel }: LinkEditProps) {
             form={form}
             labelCol={{ span: 4 }}
             onFinish={onFinish}>
+            <Form.Item 
+                name="platform" 
+                label="平台" 
+                rules={[{ required: true, message: '平台不能为空!' }]}>
+                <Select
+                    placeholder="请选择"
+                    allowClear >
+                    {
+                        Object.keys(PLATFORM_MAP).map((item: string) => (
+                            <Select.Option key={item} value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
             <Form.Item 
                 name="linkName" 
                 label="名称" 

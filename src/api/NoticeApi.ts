@@ -1,53 +1,50 @@
-import { Seo } from '../types'
+
+import { Notice } from '../types'
 import request from '../utils/request'
 
-export type SeoFindListParams = {
+
+export type NoticeFindListParams = {
     pageIndex?: number, 
     pageSize?: number,
-    platform?: string
+    platform?: number
 }
 
-class SeoApi {
-    static url = '/seo'
+class NoticeApi {
+    static url = '/notice'
 
-    static findList(params?: SeoFindListParams) {
+    static findAll() {
+        return request({
+            url: this.url + '/findAll'
+        })
+    }
+
+    static findList(params?: NoticeFindListParams) {
         return request({
             url: this.url + '/findList',
             params
         })
     }
-    static findById(params: { seoId: number }) {
+    static findById(params: { id: number }) {
         return request({
             url: this.url + '/findById',
             params
         })
     }
-    static add(data: Seo) {
+    static add(data: Notice) {
         return request({
             url: this.url + '/add',
             method: 'post',
             data
         })
     }
-
-    static findSeo() {
-        return request({
-            url: this.url + '/findSeo'
-        })
-    }
-    static findScript() {
-        return request({
-            url: this.url + '/findScript'
-        })
-    }
-    static update(data: Seo) {
+    static update(data: Notice) {
         return request({
             url: this.url + '/update',
             method: 'post',
             data
         })
     }
-    static del(data: { seoId: number }) {
+    static del(data: { id: number }) {
         return request({
             url: this.url + '/del',
             method: 'post',
@@ -56,4 +53,4 @@ class SeoApi {
     }
 }
 
-export default SeoApi
+export default NoticeApi
