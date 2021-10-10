@@ -80,6 +80,14 @@ function Posts() {
             key: 'cityName',
             width: 180,
         },{
+            title: '价格',
+            dataIndex: 'price',
+            key: 'price',
+            width: 120,
+            render: (price: number) => {
+                return <span>{price}元</span>
+            }
+        },{
             title: '创建时间',
             dataIndex: 'createTime',
             key: 'createTime',

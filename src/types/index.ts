@@ -219,6 +219,8 @@ export type Post = {
     id?: number,
     title?: string,
     content?: string,
+    price?: number,
+    contactInfo?: string,
     image?: string,
     city?: number,
     province?: number,

@@ -5,7 +5,8 @@ import {
     message, 
     Row,
     Col,
-    Select
+    Select,
+    InputNumber
 } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"
@@ -18,7 +19,6 @@ import { useHistory, useLocation } from "react-router"
 import TagApi from "../../api/TagApi"
 import PostApi from "../../api/PostApi"
 import { formDataReq } from "../../utils/tools"
-import { SITE_NAME } from "../../utils/consts"
 import CommonApi from "../../api/CommonApi"
 
 
@@ -42,7 +42,9 @@ function PostEdit() {
             id,
             city: values.city,
             title: values.title,
-            content: values.content.toHTML(),
+            price: values.price,
+            contactInfo: values.contactInfo,
+            content,
             tags: values.tags,
             imageFile
         }
@@ -94,6 +96,8 @@ function PostEdit() {
         PostApi.findById({ id }).then(res => {
             const post: Post = res.data.data
             form.setFieldsValue({ title: post.title })
+            form.setFieldsValue({ contactInfo: post.contactInfo })
+            form.setFieldsValue({ price: post.price })
             if (post.content) {
                 setContent(post.content)
             }
@@ -143,8 +147,7 @@ function PostEdit() {
                         CommonApi.upload('fenglou', formData).then(res => {
                             console.log(res.data)
                             const range = quillEditor.getSelection()
-                            const url = process.env.NODE_ENV === 'development' ? SITE_NAME + res.data.data : res.data.data
-                            quillEditor.insertEmbed(range.index, 'image', url);
+                            quillEditor.insertEmbed(range.index, 'image', res.data.data);
                         })
                     })
                     input.click()
@@ -208,6 +211,12 @@ function PostEdit() {
                             }
                         </Select>
                     </Form.Item>
+                    <Form.Item 
+                        labelCol={{ span: 8 }}
+                        name="contactInfo" 
+                        label="联系方式">
+                        <Input.TextArea placeholder="请输入..."/>
+                    </Form.Item>
                 </Col>
                 <Col span={9}>
                     <Form.Item 
@@ -245,6 +254,12 @@ function PostEdit() {
                                 ))
                             }
                         </Select>
+                    </Form.Item>
+                    <Form.Item 
+                        labelCol={{ span: 8 }} 
+                        name="price" 
+                        label="价格">
+                        <InputNumber className="w-full" min={0} max={10000} />
                     </Form.Item>
                 </Col>
             </Row>
