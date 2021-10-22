@@ -208,6 +208,7 @@ export type City = {
     name?: string,
     ename?: string,
     sort?: number,
+    isHot?: number,
     pName?: string
 }
 

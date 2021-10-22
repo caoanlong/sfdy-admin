@@ -6,7 +6,8 @@ import {
     Row,
     Col,
     InputNumber,
-    Select
+    Select,
+    Switch
 } from "antd"
 import React, { useEffect, useState } from "react"
 import { City, Province } from "../../types"
@@ -30,7 +31,8 @@ function CityAdd({ handleOk, handleCancel }: CityAddProps) {
             pId: values.pId,
             name: values.name,
             ename: values.ename,
-            sort: values.sort
+            sort: values.sort,
+            isHot: values.isHot ? 1 : 0,
         }
         CityApi.add(data).then(res => {
             message.success('添加成功！')
@@ -84,6 +86,15 @@ function CityAdd({ handleOk, handleCancel }: CityAddProps) {
             </Form.Item>
             <Form.Item name="sort" label="排序">
                 <InputNumber min={1} max={1000} />
+            </Form.Item>
+            <Form.Item 
+                name="isHot" 
+                label="是否热门" 
+                valuePropName="checked">
+                <Switch 
+                    checkedChildren="是" 
+                    unCheckedChildren="否"  
+                />
             </Form.Item>
             <Row>
                 <Col span={24} className="text-right">

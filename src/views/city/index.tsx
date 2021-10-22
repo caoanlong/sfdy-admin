@@ -85,11 +85,6 @@ function Cities() {
             key: 'id',
             width: 90
         },{
-            title: '省份',
-            dataIndex: 'pName',
-            key: 'pName',
-            ellipsis: true
-        },{
             title: '名称',
             dataIndex: 'name',
             key: 'name',
@@ -100,10 +95,26 @@ function Cities() {
             key: 'ename',
             ellipsis: true
         },{
+            title: '省份',
+            dataIndex: 'pName',
+            key: 'pName',
+            ellipsis: true
+        },{
             title: '排序',
             dataIndex: 'sort',
             key: 'sort',
             width: 80
+        },{
+            title: '是否热门',
+            dataIndex: 'isHot',
+            key: 'isHot',
+            width: 100,
+            render: (isHot: number) => {
+                if (isHot) {
+                    return <Tag color="green">是</Tag>
+                }
+                return <Tag>否</Tag>
+            }
         },{
             title: '操作',
             key: 'action',

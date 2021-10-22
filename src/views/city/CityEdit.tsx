@@ -6,7 +6,8 @@ import {
     Row,
     Col,
     InputNumber,
-    Select
+    Select,
+    Switch
 } from "antd"
 import React, { useEffect, useState } from "react"
 import { City, Province } from "../../types"
@@ -32,7 +33,8 @@ function CityEdit({ id, handleOk, handleCancel }: CityEditProps) {
             pId: values.pId,
             name: values.name,
             ename: values.ename,
-            sort: values.sort
+            sort: values.sort,
+            isHot: values.isHot ? 1 : 0,
         }
         CityApi.update(data).then(res => {
             message.success('修改成功！')
@@ -52,6 +54,7 @@ function CityEdit({ id, handleOk, handleCancel }: CityEditProps) {
             form.setFieldsValue({ ename: city.ename })
             form.setFieldsValue({ sort: city.sort })
             form.setFieldsValue({ pId: city.pId })
+            form.setFieldsValue({ isHot: city.isHot ? true : false })
         })
     }
 
@@ -95,6 +98,15 @@ function CityEdit({ id, handleOk, handleCancel }: CityEditProps) {
             </Form.Item>
             <Form.Item name="sort" label="排序">
                 <InputNumber min={1} max={1000} />
+            </Form.Item>
+            <Form.Item 
+                name="isHot" 
+                label="是否热门" 
+                valuePropName="checked">
+                <Switch 
+                    checkedChildren="是" 
+                    unCheckedChildren="否"  
+                />
             </Form.Item>
             <Row>
                 <Col span={24} className="text-right">
