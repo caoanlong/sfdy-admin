@@ -154,13 +154,13 @@ function OrderList() {
                 className="bg-white m-4 p-3 shadow"
                 form={form}
                 onFinish={onFinish}>
-                <Row gutter={24}>
-                    <Col span={6} key="orderNo">
+                <Row gutter={24} className="block md:flex">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="orderNo" label="订单号">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="platform">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="platform" label="平台">
                             <Select
                                 placeholder="请选择"
@@ -173,7 +173,7 @@ function OrderList() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="type">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="type" label="类型">
                             <Select
                                 placeholder="请选择"
@@ -186,7 +186,7 @@ function OrderList() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="status">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="status" label="状态">
                             <Select
                                 placeholder="请选择"
@@ -200,28 +200,27 @@ function OrderList() {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row>
-                    <Col span={12} offset={10}>
-                        <Button type="primary" htmlType="submit">
-                            搜索
-                        </Button>
-                        <Button
-                            className="mx-2"
-                            onClick={() => {
-                                form.resetFields()
-                                params.orderNo = undefined
-                                params.status = undefined
-                                params.type = undefined
-                                params.platform = undefined
-                                getList()
-                            }}>
-                            重置
-                        </Button>
-                    </Col>
+                <Row className="justify-end">
+                    <Button type="primary" htmlType="submit">
+                        搜索
+                    </Button>
+                    <Button
+                        className="ml-2"
+                        onClick={() => {
+                            form.resetFields()
+                            params.orderNo = undefined
+                            params.status = undefined
+                            params.type = undefined
+                            params.platform = undefined
+                            getList()
+                        }}>
+                        重置
+                    </Button>
                 </Row>
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

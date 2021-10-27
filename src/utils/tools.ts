@@ -30,3 +30,7 @@ export function formDataReq(json: any) {
     }
     return formData
 }
+
+export function isFixedMenu() {
+    return window.innerWidth > 720
+}

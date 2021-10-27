@@ -4,7 +4,7 @@
 
 @import '~antd/dist/antd.css';
 
-::-webkit-scrollbar { width: 0 !important }
+/* ::-webkit-scrollbar { width: 0 !important } */
 
 .clearfix:before,.clearfix:after {
 	content: "";

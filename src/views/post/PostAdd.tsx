@@ -31,8 +31,10 @@ function PostAdd() {
     const [ imageUrl, setImageUrl ] = useState<string>('')
     const [ imageFile, setImageFile ] = useState<File>()
     const [ content, setContent ] = useState<string>('')
+    const [ contactInfo, setContactInfo ] = useState<string>('')
 
-    const quill = useRef<any>()
+    const quillContent = useRef<any>()
+    const quillContactInfo = useRef<any>()
 
     const onFinish = (values: any) => {
         if (!content.trim()) {
@@ -40,10 +42,10 @@ function PostAdd() {
             return
         }
         const data: Post = {
-            city: values.city,
+            cityId: values.city,
             title: values.title,
-            price: values.price,
-            contactInfo: values.contactInfo,
+            price: values.price || 0,
+            contactInfo,
             content,
             tags: values.tags,
             imageFile
@@ -98,7 +100,7 @@ function PostAdd() {
         getTags()
     }, [])
 
-    const modules = {
+    const modules1 = {
         toolbar: {
             container: [
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -112,7 +114,36 @@ function PostAdd() {
             ],
             handlers: {
                 image: () => {
-                    const quillEditor = quill.current.getEditor()
+                    const quillEditor = quillContent.current.getEditor()
+                    const input = document.createElement('input')
+                    input.setAttribute('type', 'file')
+                    input.setAttribute('accept', 'image/*')
+                    input.addEventListener('change', () => {
+                        const file = input.files?.[0]
+                        const data = { file }
+                        const formData = formDataReq(data)
+                        CommonApi.upload('fenglou', formData).then(res => {
+                            console.log(res.data)
+                            const range = quillEditor.getSelection()
+                            quillEditor.insertEmbed(range.index, 'image', res.data.data);
+                        })
+                    })
+                    input.click()
+                }
+            }
+        }
+    }
+    const modules2 = {
+        toolbar: {
+            container: [
+                [{ 'align': [] }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['link', 'image'],
+                ['clean'],
+            ],
+            handlers: {
+                image: () => {
+                    const quillEditor = quillContactInfo.current.getEditor()
                     const input = document.createElement('input')
                     input.setAttribute('type', 'file')
                     input.setAttribute('accept', 'image/*')
@@ -163,7 +194,7 @@ function PostAdd() {
                         </div>
                     </Form.Item>
                 </Col>
-                <Col span={12}>
+                <Col span={12} className="mb-5">
                     <Form.Item 
                         labelCol={{ span: 8 }}
                         name="title" 
@@ -189,9 +220,16 @@ function PostAdd() {
                     </Form.Item>
                     <Form.Item 
                         labelCol={{ span: 8 }}
-                        name="contactInfo" 
+                        className="mb-16"
                         label="联系方式">
-                        <Input.TextArea placeholder="请输入..."/>
+                        <ReactQuill 
+                            ref={quillContactInfo}
+                            style={{ height: 150 }}
+                            theme="snow" 
+                            modules={modules2}
+                            value={contactInfo} 
+                            onChange={setContactInfo}
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
@@ -235,7 +273,7 @@ function PostAdd() {
                         labelCol={{ span: 8 }} 
                         name="price" 
                         label="价格">
-                        <InputNumber className="w-full" min={0} max={10000} />
+                        <InputNumber className="w-full" defaultValue={0} min={0} max={10000} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -246,10 +284,10 @@ function PostAdd() {
                 label="内容" 
                 rules={[{ required: true, message: '内容不能为空!' }]}>
                 <ReactQuill 
-                    ref={quill}
+                    ref={quillContent}
                     style={{ height: 500 }}
                     theme="snow" 
-                    modules={modules}
+                    modules={modules1}
                     value={content} 
                     onChange={setContent}
                 />

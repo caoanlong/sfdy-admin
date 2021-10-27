@@ -155,13 +155,13 @@ function FriendLink() {
                 className="bg-white m-4 p-3 shadow"
                 form={form}
                 onFinish={onFinish}>
-                <Row gutter={24}>
-                    <Col span={6} key="linkName">
+                <Row gutter={24} className="block md:flex">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="linkName" label="名称">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="platform">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="platform" label="平台">
                             <Select
                                 placeholder="请选择"
@@ -169,8 +169,8 @@ function FriendLink() {
                                 onChange={onPlatformChange}>
                                 <Select.Option value="">全部</Select.Option>
                                 {
-                                    Object.keys(PLATFORM_MAP).map((item: string) => (
-                                        <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                                    Object.keys(PLATFORM_MAP).map((item: string, i: number) => (
+                                        <Select.Option key={i} value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
                                     ))
                                 }
                             </Select>
@@ -178,7 +178,7 @@ function FriendLink() {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Button 
                             type="primary"
                             icon={<PlusOutlined/>} 
@@ -186,12 +186,12 @@ function FriendLink() {
                             添加
                         </Button>
                     </Col>
-                    <Col span={12} className="text-right">
+                    <Col span={16} className="text-right">
                         <Button type="primary" htmlType="submit">
                             搜索
                         </Button>
                         <Button
-                            className="mx-2"
+                            className="ml-2"
                             onClick={() => {
                                 form.resetFields()
                                 params.linkName = undefined
@@ -205,6 +205,7 @@ function FriendLink() {
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

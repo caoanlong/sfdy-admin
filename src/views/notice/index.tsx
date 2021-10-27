@@ -2,7 +2,6 @@ import {
     Table, 
     Tag, 
     Row, 
-    Col, 
     Button,
     Space, 
     Popconfirm, 
@@ -121,18 +120,17 @@ function NoticeList() {
                 name="advanced_search"
                 className="bg-white m-4 p-3 shadow">
                 <Row>
-                    <Col span={12}>
-                        <Button 
-                            type="primary"
-                            icon={<PlusOutlined/>} 
-                            onClick={() => setIsAddModalVisible(true)}>
-                            添加
-                        </Button>
-                    </Col>
+                    <Button 
+                        type="primary"
+                        icon={<PlusOutlined/>} 
+                        onClick={() => setIsAddModalVisible(true)}>
+                        添加
+                    </Button>
                 </Row>
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

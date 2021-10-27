@@ -22,6 +22,7 @@ import MemberAdd from "./MemberAdd"
 import VipApi from "../../../api/VipApi"
 import MemberEditVIP from "./MemberEditVIP"
 import { PLATFORM_MAP } from "../../../utils/config"
+import { isFixedMenu } from "../../../utils/tools"
 
 const params: MemberFindListParams = {
     pageIndex: 1,
@@ -144,7 +145,7 @@ function MemberList() {
             title: '代理',
             dataIndex: 'isAgent',
             key: 'isAgent',
-            width: 65,
+            width: 60,
             render: (isAgent: number) => {
                 if (isAgent === 1) return <Tag color="magenta">是</Tag>
                 return <Tag color="cyan">否</Tag>
@@ -153,7 +154,7 @@ function MemberList() {
             title: '状态',
             dataIndex: 'status',
             key: 'status',
-            width: 65,
+            width: 60,
             render: (status: number) => {
                 if (status === 1) return <Tag color="green">正常</Tag>
                 return <Tag color="red">禁用</Tag>
@@ -183,7 +184,6 @@ function MemberList() {
             title: '注册时间',
             dataIndex: 'createTime',
             key: 'createTime',
-            width: 120,
             render: (time: Date) => {
                 return (<span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>)
             }
@@ -191,7 +191,6 @@ function MemberList() {
             title: '登录时间',
             dataIndex: 'loginTime',
             key: 'loginTime',
-            width: 120,
             render: (time: Date) => {
                 return (<span>{time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : ''}</span>)
             }
@@ -239,40 +238,40 @@ function MemberList() {
                 className="bg-white m-4 p-3 shadow"
                 form={form}
                 onFinish={onFinish}>
-                <Row gutter={24}>
-                    <Col span={6} key="platform">
+                <Row gutter={24} className="block md:flex">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="platform" label="平台">
                             <Select
                                 placeholder="请选择"
                                 allowClear 
                                 onChange={onPlatformChange}>
-                                <Select.Option value="">全部</Select.Option>
+                                <Select.Option key={-1} value="">全部</Select.Option>
                                 {
-                                    Object.keys(PLATFORM_MAP).map((item: string) => (
-                                        <Select.Option value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
+                                    Object.keys(PLATFORM_MAP).map((item: string, i: number) => (
+                                        <Select.Option key={i} value={+item}>{PLATFORM_MAP[+item]}</Select.Option>
                                     ))
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="memberName">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="memberName" label="名称">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="email">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="email" label="邮箱">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="mobile">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="mobile" label="手机号">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row gutter={24}>
-                    <Col span={6} key="isAgent">
+                <Row gutter={24} className="block md:flex">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="isAgent" label="是否代理">
                             <Select
                                 placeholder="请选择"
@@ -284,7 +283,7 @@ function MemberList() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="status">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="status" label="状态">
                         <Select
                                 placeholder="请选择"
@@ -296,7 +295,7 @@ function MemberList() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="regType">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="regType" label="注册类型">
                         <Select
                                 placeholder="请选择"
@@ -312,7 +311,7 @@ function MemberList() {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Button 
                             type="primary"
                             icon={<PlusOutlined/>} 
@@ -320,12 +319,12 @@ function MemberList() {
                             添加
                         </Button>
                     </Col>
-                    <Col span={12} className="text-right">
+                    <Col span={16} className="text-right">
                         <Button type="primary" htmlType="submit">
                             搜索
                         </Button>
                         <Button
-                            className="mx-2"
+                            className="ml-2"
                             onClick={() => {
                                 form.resetFields()
                                 params.platform = undefined
@@ -344,6 +343,7 @@ function MemberList() {
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

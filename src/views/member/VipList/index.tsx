@@ -105,7 +105,7 @@ function VipList() {
         },{
             title: '操作',
             key: 'action',
-            width: 140,
+            width: 100,
             render: (text: any, record: Vip) => (
               <Space size="middle">
                 <Tag 
@@ -128,7 +128,7 @@ function VipList() {
                 form={form}
                 onFinish={onFinish}>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Button 
                             type="primary"
                             icon={<PlusOutlined/>} 
@@ -136,12 +136,12 @@ function VipList() {
                             添加
                         </Button>
                     </Col>
-                    <Col span={12} className="text-right">
+                    <Col span={16} className="text-right">
                         <Button type="primary" htmlType="submit">
                             搜索
                         </Button>
                         <Button
-                            className="mx-2"
+                            className="ml-2"
                             onClick={() => {
                                 form.resetFields()
                                 params.vipName = undefined
@@ -154,6 +154,7 @@ function VipList() {
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

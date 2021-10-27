@@ -138,15 +138,15 @@ function Posts() {
                 className="bg-white m-4 p-3 shadow"
                 form={form}
                 onFinish={onFinish}>
-                <Row gutter={24}>
-                    <Col span={6} key="title">
+                <Row gutter={24} className="block md:flex">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="title" label="名称">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Button 
                             type="primary"
                             icon={<PlusOutlined/>} 
@@ -154,12 +154,12 @@ function Posts() {
                             添加
                         </Button>
                     </Col>
-                    <Col span={12} className="text-right">
+                    <Col span={16} className="text-right">
                         <Button type="primary" htmlType="submit">
                             搜索
                         </Button>
                         <Button
-                            className="mx-2"
+                            className="ml-2"
                             onClick={() => {
                                 form.resetFields()
                                 params.title = undefined
@@ -172,6 +172,7 @@ function Posts() {
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

@@ -174,13 +174,13 @@ function VideoList() {
                 className="bg-white m-4 p-3 shadow"
                 form={form}
                 onFinish={onFinish}>
-                <Row gutter={24}>
-                    <Col span={6} key="vodName">
+                <Row gutter={24} className="block md:flex">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="vodName" label="名称">
                             <Input placeholder="请输入..."/>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="typeId">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="typeId" label="类型">
                             <Select
                                 placeholder="请选择"
@@ -199,7 +199,7 @@ function VideoList() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6} key="vodClass">
+                    <Col span={6} className="max-w-full">
                         <Form.Item name="vodClass" label="分类">
                             <Select
                                 placeholder="请选择"
@@ -217,24 +217,23 @@ function VideoList() {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row>
-                    <Col span={24} className="text-right">
-                        <Button type="primary" htmlType="submit">
-                            搜索
-                        </Button>
-                        <Button
-                            className="mx-2"
-                            onClick={() => {
-                                form.resetFields()
-                                getList()
-                            }}>
-                            重置
-                        </Button>
-                    </Col>
+                <Row className="justify-end">
+                    <Button type="primary" htmlType="submit">
+                        搜索
+                    </Button>
+                    <Button
+                        className="ml-2"
+                        onClick={() => {
+                            form.resetFields()
+                            getList()
+                        }}>
+                        重置
+                    </Button>
                 </Row>
             </Form>
             <Table 
                 className="bg-white m-4 p-3 shadow" 
+                scroll={{ x: 'max-content' }}
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

@@ -123,7 +123,8 @@ function VideoTypes() {
     return (
         <>
             <Table 
-                className="bg-white m-4 p-3 shadow" 
+                className="bg-white m-4 p-3 shadow"
+                scroll={{ x: 'max-content' }} 
                 columns={columns} 
                 dataSource={list} 
                 loading={loading}

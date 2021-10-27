@@ -47,8 +47,8 @@ const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
 
 function Base() {
-
-	const [ collapsed, setCollapsed ] = useState(false)
+	const c = localStorage.getItem('collapsed')
+	const [ collapsed, setCollapsed ] = useState(c && c === 'true' ? true : false)
 	const userInfo: User = useSelector((state: AppState) => state.user.userInfo)
 	const dispatch = useDispatch()
 	const history = useHistory()
@@ -67,6 +67,10 @@ function Base() {
 	useEffect(() => {
 		dispatch(fetchUserInfo())
 	}, [])
+
+	useEffect(() => {
+		localStorage.setItem('collapsed', String(collapsed))
+	}, [collapsed])
 
     return (
         <div>
