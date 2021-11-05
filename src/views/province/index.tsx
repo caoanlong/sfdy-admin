@@ -172,6 +172,8 @@ function Provinces() {
                 loading={loading}
                 pagination={{
                     total,
+                    defaultCurrent: params.pageIndex,
+                    showQuickJumper: true,
                     showSizeChanger: true,
                     showTotal: t => `总数： ${t} 条`,
                     onChange: (pageIndex, pageSize) => {

@@ -23,7 +23,8 @@ const STATUS_MAP: {[key: number]: { style: string, text: string }} = {
 const TYPE_MAP: {[key: number]: string} = {
     1: '充值',
     2: '提现',
-    3: '佣金'
+    3: '佣金',
+    4: '购买'
 }
 
 function OrderList() {

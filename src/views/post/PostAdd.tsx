@@ -220,11 +220,9 @@ function PostAdd() {
                     </Form.Item>
                     <Form.Item 
                         labelCol={{ span: 8 }}
-                        className="mb-16"
                         label="联系方式">
                         <ReactQuill 
                             ref={quillContactInfo}
-                            style={{ height: 150 }}
                             theme="snow" 
                             modules={modules2}
                             value={contactInfo} 
@@ -275,29 +273,27 @@ function PostAdd() {
                         label="价格">
                         <InputNumber className="w-full" defaultValue={0} min={0} max={10000} />
                     </Form.Item>
+                    <Row>
+                        <Col span={24} offset={8}>
+                            <Button className="mr-3" onClick={() => history.goBack()}>取消</Button>
+                            <Button type="primary" htmlType="submit">确定</Button>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
             
             <Form.Item 
                 labelCol={{ span: 1 }}
-                className="mb-16"
                 label="内容" 
                 rules={[{ required: true, message: '内容不能为空!' }]}>
                 <ReactQuill 
                     ref={quillContent}
-                    style={{ height: 500 }}
                     theme="snow" 
                     modules={modules1}
                     value={content} 
                     onChange={setContent}
                 />
             </Form.Item>
-            <Row>
-                <Col span={24} offset={1}>
-                    <Button className="mr-3" onClick={() => history.goBack()}>取消</Button>
-                    <Button type="primary" htmlType="submit">确定</Button>
-                </Col>
-            </Row>
         </Form>
     )
 }
